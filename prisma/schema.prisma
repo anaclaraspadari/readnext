@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum StatusLeitura {
+  quero_ler
+  lendo
+  lido
+  abandonado
+}
+
+model Livro {
+  id                String        @id @default(uuid())
+  usuario_id        String
+  google_book_id    String?       @unique
+  titulo            String
+  autores           String[]
+  capa_url          String?
+  status            StatusLeitura @default(quero_ler)
+  data_adicionado   DateTime      @default(now())
+  data_finalizacao  DateTime?
+
+  @@map("livros")
+}
+
+model Usuario{
+  id                String        @id @default(uuid())
+  nome              String
+  email             String
+  senha             String
+
+  @@map("usuarios")
+}

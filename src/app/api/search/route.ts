@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 interface GoogleBookItem {
   volumeInfo: {
@@ -33,7 +34,6 @@ export async function GET(request: Request) {
 
     const res = await fetch(googleBooksUrl.toString());
     const data = await res.json();
-    console.log("CONTEÚDO RECEBIDO:", data);
 
     const formattedBooks = data.items?.map((item: GoogleBookItem) => ({
       title: item.volumeInfo.title,
@@ -44,15 +44,17 @@ export async function GET(request: Request) {
       language: [item.volumeInfo.language || 'N/A']
     })) || [];
 
+    const totalNoBanco = await prisma.livro.count();
+    console.log("Total de livros já salvos no banco:", totalNoBanco);
+
     return NextResponse.json(formattedBooks);
 
   } catch (error: unknown) {
-    // 3. No catch, usamos 'unknown' e verificamos se é um erro real
     const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
-    console.error("Erro Google Books:", errorMessage);
+    console.error("Erro na Rota Search:", errorMessage);
     
     return NextResponse.json(
-      { error: 'Erro ao consultar Google Books', details: errorMessage }, 
+      { error: 'Erro na operação', details: errorMessage }, 
       { status: 500 }
     );
   }
