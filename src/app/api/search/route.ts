@@ -2,17 +2,13 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 interface GoogleBookItem {
+  id: string;
   volumeInfo: {
     title: string;
     authors?: string[];
     publishedDate?: string;
-    industryIdentifiers?: Array<{
-      type: string;
-      identifier: string;
-    }>;
-    imageLinks?: {
-      thumbnail?: string;
-    };
+    industryIdentifiers?: Array<{ type: string; identifier: string }>;
+    imageLinks?: { thumbnail?: string };
     language?: string;
   };
 }
@@ -27,25 +23,54 @@ export async function GET(request: Request) {
     }
 
     const googleBooksUrl = new URL('https://www.googleapis.com/books/v1/volumes');
-    googleBooksUrl.searchParams.set('q', `intitle:${title}`);
-    googleBooksUrl.searchParams.set('langRestrict', 'pt,en');
+    googleBooksUrl.searchParams.set('q', title); // Removi o intitle: para ser mais abrangente
     googleBooksUrl.searchParams.set('maxResults', '10');
     googleBooksUrl.searchParams.set('printType', 'books');
+    
+    // Puxa a chave do .env
+    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+    if (apiKey) {
+      googleBooksUrl.searchParams.set('key', apiKey);
+    }
 
     const res = await fetch(googleBooksUrl.toString());
     const data = await res.json();
+    if (data.error) {
+      console.error("Erro na API do Google:", data.error.message);
+      
+      if (data.error.code === 429) {
+        return NextResponse.json([
+          {
+            id: "mock_hobbit_123",
+            title: "O Hobbit (Modo Offline/Quota)",
+            author_name: ["J.R.R. Tolkien"],
+            first_publish_year: "1937",
+            isbn: "9788595084742",
+            cover_url: "https://via.placeholder.com/150",
+            language: "pt",
+            ja_adicionado: false
+          }
+        ]);
+      }
+      throw new Error(data.error.message);
+    }
+    const livrosExistentes = await prisma.livro.findMany({
+      select: { google_book_id: true }
+    });
+    const idsNaEstante = new Set(livrosExistentes.map(l => l.google_book_id));
 
     const formattedBooks = data.items?.map((item: GoogleBookItem) => ({
+      id: item.id,
       title: item.volumeInfo.title,
       author_name: item.volumeInfo.authors || ['N/A'],
       first_publish_year: item.volumeInfo.publishedDate?.split('-')[0] || 'N/A',
-      isbn: item.volumeInfo.industryIdentifiers?.map(id => id.identifier) || ['N/A'],
+      isbn: item.volumeInfo.industryIdentifiers?.find(id => id.type === "ISBN_13")?.identifier 
+            || item.volumeInfo.industryIdentifiers?.[0]?.identifier 
+            || 'N/A',
       cover_url: item.volumeInfo.imageLinks?.thumbnail?.replace('http:', 'https:'),
-      language: [item.volumeInfo.language || 'N/A']
+      language: item.volumeInfo.language || 'N/A',
+      ja_adicionado: idsNaEstante.has(item.id) 
     })) || [];
-
-    const totalNoBanco = await prisma.livro.count();
-    console.log("Total de livros já salvos no banco:", totalNoBanco);
 
     return NextResponse.json(formattedBooks);
 
@@ -54,7 +79,7 @@ export async function GET(request: Request) {
     console.error("Erro na Rota Search:", errorMessage);
     
     return NextResponse.json(
-      { error: 'Erro na operação', details: errorMessage }, 
+      { error: 'Erro ao processar busca', details: errorMessage }, 
       { status: 500 }
     );
   }

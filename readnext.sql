@@ -4,6 +4,13 @@ drop type if exists livro_status cascade;
 
 create type livro_status as enum ('lendo', 'quero ler', 'lido', 'abandonado');
 
+create table usuarios(
+    id uuid primary key default gen_random_uuid(),
+    nome varchar(255) not null,
+    email varchar(255) not null unique,
+    senha varchar(255) not null
+);
+
 create table livros(
     id uuid primary key default gen_random_uuid(),
     usuario_id uuid not null unique,
@@ -19,11 +26,4 @@ create table livros(
     data_adicionado timestamp with time zone default current_timestamp,
     data_concluido timestamp with time zone,
     foreign key (usuario_id) references usuarios(id) on delete cascade
-);
-
-create table usuarios(
-    id uuid primary key default gen_random_uuid(),
-    nome varchar(255) not null,
-    email varchar(255) not null unique,
-    senha varchar(255) not null
 );
