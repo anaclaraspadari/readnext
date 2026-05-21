@@ -126,17 +126,17 @@ export default function AuthPanel() {
 
       <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem' }}>
         {authMode === 'register' && (
-          <label style={{ display: 'grid', gap: '0.5rem' }}>
-            Nome completo
-            <input
-              type="text"
-              value={nome}
-              onChange={(event) => setNome(event.target.value)}
-              className="text-black p-2 rounded border"
-              required={authMode === 'register'}
-            />
-          </label>
-          {authMode === 'register' && (
+          <>
+            <label style={{ display: 'grid', gap: '0.5rem' }}>
+              Nome completo
+              <input
+                type="text"
+                value={nome}
+                onChange={(event) => setNome(event.target.value)}
+                className="text-black p-2 rounded border"
+                required={authMode === 'register'}
+              />
+            </label>
             <label style={{ display: 'grid', gap: '0.5rem' }}>
               Foto de perfil (opcional)
               <input
@@ -146,7 +146,7 @@ export default function AuthPanel() {
                 className="p-2"
               />
             </label>
-          )}
+          </>
         )}
 
         <label style={{ display: 'grid', gap: '0.5rem' }}>

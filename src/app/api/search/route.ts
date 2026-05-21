@@ -17,14 +17,18 @@ interface GoogleBookItem {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const title = searchParams.get('title');
+    const searchType = searchParams.get('searchType') || 'title';
+    const query = searchParams.get('q');
 
-    if (!title) {
-      return NextResponse.json({ error: 'Título é obrigatório' }, { status: 400 });
+    if (!query) {
+      return NextResponse.json({ error: 'Termo de busca é obrigatório' }, { status: 400 });
     }
 
+    // Formatar a query de acordo com o tipo de busca
+    const formattedQuery = searchType === 'author' ? `author:${query}` : query;
+
     const googleBooksUrl = new URL('https://www.googleapis.com/books/v1/volumes');
-    googleBooksUrl.searchParams.set('q', title);
+    googleBooksUrl.searchParams.set('q', formattedQuery);
     googleBooksUrl.searchParams.set('maxResults', '10');
     googleBooksUrl.searchParams.set('printType', 'books');
 

@@ -52,6 +52,7 @@ export default function LibraryPanel() {
   const router = useRouter();
   const [user, setUser] = useState<User | null | undefined>(undefined);
   const [query, setQuery] = useState('');
+  const [searchType, setSearchType] = useState<'title' | 'author'>('title');
   const [books, setBooks] = useState<SearchBook[]>([]);
   const [library, setLibrary] = useState<LibraryBook[]>([]);
   const [loading, setLoading] = useState(false);
@@ -116,13 +117,14 @@ export default function LibraryPanel() {
     setMessage(null);
 
     if (!query.trim()) {
-      setMessage('Digite um título antes de pesquisar.');
+      const fieldName = searchType === 'author' ? 'um autor' : 'um título';
+      setMessage(`Digite ${fieldName} antes de pesquisar.`);
       setLoading(false);
       return;
     }
 
     try {
-      const response = await fetch(`/api/search?title=${encodeURIComponent(query)}`);
+      const response = await fetch(`/api/search?searchType=${searchType}&q=${encodeURIComponent(query)}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -292,12 +294,21 @@ export default function LibraryPanel() {
         </div>
       )}
 
-      <form onSubmit={handleSearch} style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+      <form onSubmit={handleSearch} style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem', alignItems: 'center' }}>
+        <select
+          value={searchType}
+          onChange={(event) => setSearchType(event.target.value as 'title' | 'author')}
+          className="text-black p-2 rounded border"
+          style={{ padding: '0.5rem 0.75rem' }}
+        >
+          <option value="title">Título</option>
+          <option value="author">Autor</option>
+        </select>
         <input
           type="text"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Digite o título do livro..."
+          placeholder={searchType === 'author' ? 'Digite o nome do autor...' : 'Digite o título do livro...'}
           className="text-black p-2 rounded border"
           style={{ flex: '1 1 280px', minWidth: '220px' }}
         />
