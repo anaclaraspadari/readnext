@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FormEvent, useEffect, useState } from 'react';
+import { SubmitEventHandler, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 type AuthMode = 'login' | 'register';
@@ -37,7 +37,7 @@ export default function AuthPanel() {
     checkSession();
   }, [router]);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
     setLoading(true);
     setMessage(null);

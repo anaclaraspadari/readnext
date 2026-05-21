@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getUserIdFromRequest } from '@/lib/auth';
 
+// Rota para buscar livros na API do Google Books - GET /api/search?q=termo&searchType=title|author
+
 interface GoogleBookItem {
   id: string;
   volumeInfo: {

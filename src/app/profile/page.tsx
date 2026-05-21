@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { SubmitEventHandler, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface User {
@@ -35,7 +35,7 @@ export default function ProfilePage() {
     load();
   }, [router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     if (!file) return setMessage('Selecione uma imagem.');
 

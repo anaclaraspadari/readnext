@@ -4,6 +4,8 @@ import { getUserIdFromRequest } from '@/lib/auth';
 import fs from 'fs';
 import path from 'path';
 
+// Rota para atualizar a foto do usuário autenticado - POST /api/auth/avatar
+
 function getExtensionFromDataUrl(dataUrl: string) {
   const match = dataUrl.match(/^data:(image\/(png|jpeg|jpg|webp));base64,/i);
   if (!match) return null;

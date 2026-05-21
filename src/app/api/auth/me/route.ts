@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getUserIdFromRequest } from '@/lib/auth';
 
+// Rota para obter os dados do usuário autenticado - GET /api/auth/me
+
 export async function GET(request: Request) {
   const userId = getUserIdFromRequest(request);
 

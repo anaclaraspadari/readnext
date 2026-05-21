@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { SubmitEventHandler, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 type StatusLeitura = 'quero_ler' | 'lendo' | 'lido' | 'abandonado';
@@ -111,7 +111,7 @@ export default function LibraryPanel() {
     }
   };
 
-  const handleSearch = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSearch: SubmitEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
     setLoading(true);
     setMessage(null);

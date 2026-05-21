@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getUserIdFromRequest } from '@/lib/auth';
 
+// Rota para gerenciar livros do usuário autenticado - GET, POST, PATCH /api/livros
+
 const STATUS_VALUES = ['quero_ler', 'lendo', 'lido', 'abandonado'] as const;
 type StatusLeitura = (typeof STATUS_VALUES)[number];
 

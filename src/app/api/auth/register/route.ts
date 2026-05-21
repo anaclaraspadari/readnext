@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { createToken, hashPassword, AUTH_COOKIE_MAX_AGE, AUTH_COOKIE_NAME } from '@/lib/auth';
 import fs from 'fs';
 import path from 'path';
+
+// Rota de registro - POST /api/auth/register
 
 function getExtensionFromDataUrl(dataUrl: string) {
   const match = dataUrl.match(/^data:(image\/(png|jpeg|jpg|webp));base64,/i);
