@@ -23,6 +23,7 @@ model Livro {
   status            StatusLeitura @default(quero_ler)
   data_adicionado   DateTime      @default(now())
   data_finalizacao  DateTime?
+  user              Usuario     @relation(fields: [usuario_id], references: [id])
 
   @@map("livros")
 }
@@ -30,8 +31,10 @@ model Livro {
 model Usuario{
   id                String        @id @default(uuid())
   nome              String
-  email             String
+  email             String        @unique
+  foto_url          String?
   senha             String
-
+  livros            Livro[]
+  
   @@map("usuarios")
 }
