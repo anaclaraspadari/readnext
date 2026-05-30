@@ -1,0 +1,23 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        'brand-dark': '#BD5800',  // Marrom dos títulos, botões e barras
+        'brand-bg': '#FBFBFB',    // Fundo esbranquiçado/bege leve das telas
+        'brand-light': '#F6CBA5', // Pêssego das abas ativas e do gráfico
+      },
+      fontFamily: {
+        // Se você configurou as fontes no seu layout principal:
+        orelega: ['var(--font-orelega)', 'serif'],
+        serifPro: ['var(--font-serif-pro)', 'serif'],
+      },
+    },
+  },
+  plugins: [],
+}

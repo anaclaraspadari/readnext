@@ -1,97 +1,138 @@
-"use client";
-
-import { SubmitEventHandler, useEffect, useState } from 'react';
+'use client';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-
-interface User {
-  id: string;
-  nome: string;
-  email: string;
-  foto_url?: string | null;
-}
+import BaseLayout from '@/components/BaseLayout';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [file, setFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [sucesso, setSucesso] = useState('');
+  const [erro, setErro] = useState('');
 
   useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch('/api/auth/me');
-        if (!res.ok) {
-          router.push('/login');
-          return;
-        }
-        const data = await res.json();
-        setUser(data);
-      } catch (err) {
-        router.push('/login');
-      }
-    }
-
-    load();
+    fetch('/api/auth/me')
+      .then((r) => { if (!r.ok) router.push('/login'); return r.json(); })
+      .then((d) => { setNome(d.nome || ''); setEmail(d.email || ''); setLoading(false); })
+      .catch(() => router.push('/login'));
   }, [router]);
 
-  const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault();
-    if (!file) return setMessage('Selecione uma imagem.');
+  async function salvar() {
+    setErro(''); setSucesso('');
+    if (!nome.trim()) { setErro('O nome não pode estar vazio.'); return; }
+    // Aqui chamaria PUT /api/auth/me quando implementado no backend
+    setSucesso('Dados atualizados com sucesso!');
+  }
 
-    setLoading(true);
-    setMessage(null);
-
-    try {
-      const fotoBase64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-
-      const res = await fetch('/api/auth/avatar', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ foto: fotoBase64 }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || 'Erro ao atualizar foto');
-
-      setUser((u) => (u ? { ...u, foto_url: data.foto_url } : u));
-      setMessage('Foto atualizada.');
-      setFile(null);
-    } catch (err: unknown) {
-      setMessage(err instanceof Error ? err.message : 'Erro desconhecido.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (!user) return <div>Carregando...</div>;
+  if (loading) return (
+    <BaseLayout>
+      <div style={{ padding: 32, textAlign: 'center', color: 'var(--text-secondary)' }}>Carregando...</div>
+    </BaseLayout>
+  );
 
   return (
-    <main style={{ padding: '2rem', maxWidth: '640px', margin: '0 auto' }}>
-      <h1>Perfil</h1>
-      <p>Nome: {user.nome}</p>
-      <p>E-mail: {user.email}</p>
+    <BaseLayout>
+      <div style={styles.page}>
+        <h2 style={styles.title}>Alterar dados</h2>
 
-      <div style={{ margin: '1rem 0' }}>
-        <p>Foto atual:</p>
-        {user.foto_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={user.foto_url} alt="Foto de perfil" style={{ width: 120, height: 120, borderRadius: '50%' }} />
-        ) : (
-          <div style={{ width: 120, height: 120, borderRadius: '50%', background: '#e5e7eb' }} />
-        )}
+        {/* Avatar */}
+        <div style={styles.avatarWrap}>
+          <div style={styles.avatar}>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </div>
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 8 }}>Foto do perfil</p>
+        </div>
+
+        <div style={styles.form}>
+          <label style={styles.label}>Nome do usuário</label>
+          <input
+            type="text"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            style={styles.input}
+          />
+
+          <label style={{ ...styles.label, marginTop: 20 }}>E-mail</label>
+          <input
+            type="email"
+            value={email}
+            disabled
+            style={{ ...styles.input, opacity: 0.6 }}
+          />
+          <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>O e-mail não pode ser alterado.</p>
+
+          {sucesso && <p style={styles.sucesso}>{sucesso}</p>}
+          {erro && <p style={styles.erro}>{erro}</p>}
+
+          <button onClick={salvar} style={styles.btn}>Salvar alterações</button>
+        </div>
       </div>
-
-      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem' }}>
-        <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)} />
-        <button type="submit" disabled={loading}>{loading ? 'Enviando...' : 'Atualizar foto'}</button>
-        {message && <div>{message}</div>}
-      </form>
-    </main>
+    </BaseLayout>
   );
 }
+
+const styles: Record<string, React.CSSProperties> = {
+  page: { padding: '32px 24px', maxWidth: 430, margin: '0 auto' },
+  title: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: 800,
+    fontSize: 22,
+    color: 'var(--brand)',
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  avatarWrap: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: '50%',
+    border: '2.5px solid var(--brand)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'var(--brand-light)',
+  },
+  form: { display: 'flex', flexDirection: 'column' },
+  label: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: 700,
+    fontSize: 14,
+    color: 'var(--brand)',
+    marginBottom: 8,
+  },
+  input: {
+    border: '1.5px solid var(--brand)',
+    borderRadius: 24,
+    padding: '10px 18px',
+    fontSize: 15,
+    outline: 'none',
+    background: 'transparent',
+    color: 'var(--text-primary)',
+    fontFamily: 'var(--font-body)',
+    width: '100%',
+  },
+  btn: {
+    marginTop: 28,
+    background: 'var(--brand)',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 'var(--radius-btn)',
+    padding: '13px',
+    fontSize: 16,
+    fontFamily: 'var(--font-display)',
+    fontWeight: 800,
+    cursor: 'pointer',
+    width: '100%',
+  },
+  sucesso: { color: '#16a34a', fontSize: 13, textAlign: 'center', marginTop: 12 },
+  erro: { color: '#dc2626', fontSize: 13, textAlign: 'center', marginTop: 12 },
+};

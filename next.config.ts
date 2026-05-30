@@ -1,8 +1,9 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  reactCompiler: true,
+  images: {
+    domains: ['books.google.com', 'via.placeholder.com'],
+  },
 };
 
 export default nextConfig;
