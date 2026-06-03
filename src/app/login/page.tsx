@@ -85,7 +85,7 @@ export default function LoginPage() {
 
         <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--text-secondary)' }}>
           Não tem uma conta?{' '}
-          <Link href="/cadastro" style={styles.link}>Cadastre-se!</Link>
+          <Link href="/register" style={styles.link}>Cadastre-se!</Link>
         </p>
 
         <div style={{ textAlign: 'center', marginTop: 16 }}>

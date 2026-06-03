@@ -16,13 +16,14 @@ enum StatusLeitura {
 model Livro {
   id                String        @id @default(uuid())
   usuario_id        String
-  google_book_id    String?       @unique
+  google_book_id    String?       
   titulo            String
   autores           String[]
   capa_url          String?
   status            StatusLeitura @default(quero_ler)
   data_adicionado   DateTime      @default(now())
   data_finalizacao  DateTime?
+  avaliacao         Int?
   user              Usuario     @relation(fields: [usuario_id], references: [id])
 
   @@map("livros")

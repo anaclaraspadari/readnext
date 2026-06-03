@@ -25,21 +25,59 @@ const STATUS_OPTIONS = [
   { val: 'abandonado',label: 'Abandonado' },
 ];
 
+interface DetalhesLivro {
+  titulo: string;
+  autores: string[];
+  capa_url?: string;
+  sinopse: string;
+  carregando: boolean;
+}
+
 export default function LivrosPage() {
   const router = useRouter();
-  const [query, setQuery]           = useState('');
-  const [searchType, setSearchType] = useState('title');
-  const [resultados, setResultados] = useState<Livro[]>([]);
-  const [loading, setLoading]       = useState(false);
-  const [erro, setErro]             = useState('');
-  const [livroMenu, setLivroMenu]   = useState<Livro | null>(null);
+  const [query, setQuery]             = useState('');
+  const [searchType, setSearchType]   = useState('title');
+  const [resultados, setResultados]   = useState<Livro[]>([]);
+  const [loading, setLoading]         = useState(false);
+  const [erro, setErro]               = useState('');
+  const [livroMenu, setLivroMenu]     = useState<Livro | null>(null);
   const [adicionando, setAdicionando] = useState<string | null>(null);
-  const [toast, setToast]           = useState('');
+  const [toast, setToast]             = useState('');
+  const [detalhes, setDetalhes]       = useState<DetalhesLivro | null>(null);
 
   const showToast = (msg: string) => {
     setToast(msg);
     setTimeout(() => setToast(''), 3000);
   };
+
+  async function abrirDetalhes(livro: Livro) {
+    setLivroMenu(null);
+    setDetalhes({
+      titulo:     livro.title,
+      autores:    livro.author_name,
+      capa_url:   livro.cover_url,
+      sinopse:    '',
+      carregando: true,
+    });
+    try {
+      const res  = await fetch(`https://www.googleapis.com/books/v1/volumes/${livro.id}`);
+      const data = await res.json();
+      const info = data.volumeInfo ?? {};
+      setDetalhes({
+        titulo:     info.title   ?? livro.title,
+        autores:    info.authors ?? livro.author_name,
+        capa_url:   info.imageLinks?.thumbnail?.replace('http:', 'https:') ?? livro.cover_url,
+        sinopse:    info.description
+          ? info.description.replace(/<[^>]*>/g, '')
+          : 'Sinopse não disponível.',
+        carregando: false,
+      });
+    } catch {
+      setDetalhes((prev) =>
+        prev ? { ...prev, sinopse: 'Não foi possível carregar a sinopse.', carregando: false } : null
+      );
+    }
+  }
 
   const buscar = useCallback(async () => {
     if (!query.trim()) return;
@@ -91,6 +129,10 @@ export default function LivrosPage() {
       });
       const data = await res.json();
       if (res.status === 409) {
+        // Livro já existe — marca como adicionado na UI mesmo assim
+        setResultados((prev) =>
+          prev.map((l) => (l.id === livro.id ? { ...l, ja_adicionado: true } : l))
+        );
         showToast('Este livro já está na sua estante.');
       } else if (res.status === 403) {
         showToast(data.message || 'Limite de livros atingido!');
@@ -151,8 +193,12 @@ export default function LivrosPage() {
           <div style={styles.grid}>
             {resultados.map((livro) => (
               <div key={livro.id} style={styles.card}>
-                {/* Cover */}
-                <div style={styles.cover}>
+                {/* Cover — clicável para detalhes */}
+                <button
+                  onClick={() => abrirDetalhes(livro)}
+                  aria-label={`Ver detalhes de ${livro.title}`}
+                  style={styles.coverBtn}
+                >
                   {livro.cover_url ? (
                     <img
                       src={livro.cover_url}
@@ -170,7 +216,13 @@ export default function LivrosPage() {
                   {livro.ja_adicionado && (
                     <div style={styles.addedBadge}>✓</div>
                   )}
-                </div>
+                  {/* Hover overlay */}
+                  <div style={styles.coverOverlay}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                  </div>
+                </button>
 
                 {/* Footer */}
                 <div style={styles.cardFooter}>
@@ -216,6 +268,44 @@ export default function LivrosPage() {
           </div>
         )}
       </div>
+
+      {/* ── Modal de detalhes (capa) ── */}
+      {detalhes && (
+        <>
+          <div
+            onClick={() => setDetalhes(null)}
+            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 400 }}
+          />
+          <div style={styles.detalhesModal}>
+            <button onClick={() => setDetalhes(null)} style={styles.fecharBtn} aria-label="Fechar">×</button>
+            <div style={styles.detalhesHeader}>
+              {detalhes.capa_url ? (
+                <img
+                  src={detalhes.capa_url}
+                  alt={detalhes.titulo}
+                  style={{ width: 90, height: 130, objectFit: 'cover', borderRadius: 6, flexShrink: 0, boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}
+                />
+              ) : (
+                <div style={{ width: 90, height: 130, background: '#e7e5e4', borderRadius: 6, flexShrink: 0 }} />
+              )}
+              <div style={{ minWidth: 0 }}>
+                <p style={styles.detalhesTitulo}>{detalhes.titulo}</p>
+                <p style={styles.detalhesAutor}>{detalhes.autores?.join(', ')}</p>
+              </div>
+            </div>
+            <div style={styles.sinopseBox}>
+              {detalhes.carregando ? (
+                <p style={{ color: 'var(--text-secondary)', fontSize: 14, textAlign: 'center' }}>Carregando sinopse...</p>
+              ) : (
+                <>
+                  <p style={styles.sinopseLabel}>Sinopse</p>
+                  <p style={styles.sinopseTexto}>{detalhes.sinopse}</p>
+                </>
+              )}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* ── Bottom Sheet de status ── */}
       {livroMenu && (
@@ -356,13 +446,29 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     flexDirection: 'column' as const,
   },
-  cover: {
+  coverBtn: {
     width: '100%',
     aspectRatio: '2/3',
     background: '#e7e5e4',
     borderRadius: '12px 12px 0 0',
     position: 'relative' as const,
-    overflow: 'hidden',    /* apenas na capa, não no card inteiro */
+    overflow: 'hidden',
+    border: 'none',
+    padding: 0,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  coverOverlay: {
+    position: 'absolute' as const,
+    inset: 0,
+    background: 'rgba(0,0,0,0.38)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    opacity: 0,
+    transition: 'opacity 0.15s',
   },
   coverPlaceholder: {
     width: '100%',
@@ -506,6 +612,26 @@ const styles: Record<string, React.CSSProperties> = {
     textAlign: 'center' as const,
     boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
   },
+  // Modal de detalhes
+  detalhesModal: {
+    position: 'fixed' as const, top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+    background: 'var(--bg-card)', borderRadius: 'var(--radius)', zIndex: 401,
+    padding: 24, width: 'min(92vw, 400px)', maxHeight: '80vh',
+    boxShadow: '0 8px 40px rgba(0,0,0,0.25)', display: 'flex',
+    flexDirection: 'column' as const, gap: 16,
+  },
+  fecharBtn: {
+    position: 'absolute' as const, top: 12, right: 16,
+    background: 'none', border: 'none', fontSize: 26,
+    cursor: 'pointer', color: 'var(--text-secondary)', lineHeight: 1,
+  },
+  detalhesHeader: { display: 'flex', gap: 16, alignItems: 'flex-start', marginTop: 8 },
+  detalhesTitulo: { fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 17, color: 'var(--brand)', marginBottom: 4 },
+  detalhesAutor:  { fontSize: 13, color: 'var(--text-secondary)' },
+  sinopseBox:     { overflowY: 'auto' as const, maxHeight: 260, paddingRight: 4 },
+  sinopseLabel:   { fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 14, color: 'var(--brand)', marginBottom: 8 },
+  sinopseTexto:   { fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.7 },
+
   emptyState: {
     display: 'flex',
     flexDirection: 'column' as const,

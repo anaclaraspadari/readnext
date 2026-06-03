@@ -32,8 +32,10 @@ export default function DashboardPage() {
     load();
   }, [router]);
 
-  const total = livros.length;
-  const lidos = livros.filter((l) => l.status === 'lido').length;
+  // Abandonados não contam na meta
+  const livrosAtivos = livros.filter((l) => l.status !== 'abandonado');
+  const total  = livrosAtivos.length;
+  const lidos  = livrosAtivos.filter((l) => l.status === 'lido').length;
   const percent = total > 0 ? Math.round((lidos / total) * 100) : 0;
 
   const mensagem = () => {
