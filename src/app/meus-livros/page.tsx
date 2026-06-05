@@ -104,9 +104,6 @@ export default function MeusLivrosPage() {
   async function confirmarStatus() {
     if (!modalLivro) return;
     setSalvando(true);
-    const marcandoLido = novoStatus === 'lido';
-    const boaAvaliacao = estrelas >= 3;
-
     try {
       const res = await fetch('/api/livros', {
         method: 'PATCH',
@@ -121,16 +118,7 @@ export default function MeusLivrosPage() {
 
       if (!res.ok) { showToast(data.error || 'Erro ao salvar.', 'erro'); return; }
 
-      if (marcandoLido && boaAvaliacao && data.continuacoes_adicionadas > 0) {
-        const parcial = data.limite_atingido
-          ? ` (limite de lista atingido, ${data.continuacoes_adicionadas} adicionado(s))`
-          : '';
-        showToast(`✨ ${data.continuacoes_adicionadas} continuação(ões) adicionada(s) à sua lista de desejos!${parcial}`, 'info');
-      } else if (marcandoLido && boaAvaliacao && data.continuacoes_adicionadas === 0) {
-        showToast('Nenhuma continuação encontrada para adicionar.', 'info');
-      } else {
-        showToast('Status atualizado!', 'ok');
-      }
+      showToast('Status atualizado!', 'ok');
 
       setModalLivro(null);
       setEstrelas(0);
@@ -351,13 +339,6 @@ export default function MeusLivrosPage() {
                 </select>
               </div>
             </div>
-
-            {novoStatus === 'lido' && (
-              <div style={styles.autoHint}>
-                <span style={{ fontSize: 16 }}>📚</span>
-                <span>Com <strong>3+ estrelas</strong>, continuações serão adicionadas automaticamente à sua lista de desejos.</span>
-              </div>
-            )}
 
             <p style={{ fontSize: 14, color: 'var(--brand)', textAlign: 'center', margin: '16px 0 8px', fontWeight: 600 }}>
               Quantas estrelas esse livro merece?
