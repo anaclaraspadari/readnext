@@ -9,7 +9,7 @@ interface Props {
 
 export default function SidebarMenu({ isOpen, onClose }: Props) {
   const router = useRouter();
-  const [user, setUser] = useState<{ nome: string; email: string } | null>(null);
+  const [user, setUser] = useState<{ nome: string; email: string; foto_url?: string | null } | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -77,21 +77,31 @@ export default function SidebarMenu({ isOpen, onClose }: Props) {
 
         {/* User info */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
-          <div style={{
-            width: 56,
-            height: 56,
-            borderRadius: '50%',
-            border: '2.5px solid var(--brand)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--brand)',
-          }}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <div style={{
+          width: 56,
+          height: 56,
+          borderRadius: '50%',
+          border: '2.5px solid var(--brand)',
+          overflow: 'hidden',
+          flexShrink: 0,
+          background: 'var(--brand-light)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          {user?.foto_url ? (
+            <img
+              src={user.foto_url}
+              alt={user.nome}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          ) : (
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
               <circle cx="12" cy="7" r="4" />
             </svg>
-          </div>
+          )}
+        </div>
           <div>
             <p style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: 'var(--text-brand)' }}>
               {user?.nome || 'Usuário'}

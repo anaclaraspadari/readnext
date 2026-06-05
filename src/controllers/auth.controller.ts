@@ -60,7 +60,12 @@ export async function me(request: Request) {
   }
   try {
     const usuario = await AuthService.obterUsuario(usuario_id);
-    return NextResponse.json({ id: usuario.id, nome: usuario.nome, email: usuario.email });
+    return NextResponse.json({
+      id:       usuario.id,
+      nome:     usuario.nome,
+      email:    usuario.email,
+      foto_url: usuario.foto_url ?? null,
+    });
   } catch (err) {
     if (err instanceof UsuarioNaoEncontradoError) {
       return NextResponse.json({ error: err.message }, { status: 401 });
