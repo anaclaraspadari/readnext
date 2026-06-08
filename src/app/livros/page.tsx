@@ -129,7 +129,6 @@ export default function LivrosPage() {
       });
       const data = await res.json();
       if (res.status === 409) {
-        // Livro já existe — marca como adicionado na UI mesmo assim
         setResultados((prev) =>
           prev.map((l) => (l.id === livro.id ? { ...l, ja_adicionado: true } : l))
         );
@@ -156,8 +155,6 @@ export default function LivrosPage() {
     <BaseLayout>
       <div style={styles.page}>
         <h2 style={styles.title}>Adicionar novos livros</h2>
-
-        {/* Search bar */}
         <div style={styles.searchRow}>
           <input
             type="text"
@@ -193,7 +190,6 @@ export default function LivrosPage() {
           <div style={styles.grid}>
             {resultados.map((livro) => (
               <div key={livro.id} style={styles.card}>
-                {/* Cover — clicável para detalhes */}
                 <button
                   onClick={() => abrirDetalhes(livro)}
                   aria-label={`Ver detalhes de ${livro.title}`}
@@ -216,7 +212,6 @@ export default function LivrosPage() {
                   {livro.ja_adicionado && (
                     <div style={styles.addedBadge}>✓</div>
                   )}
-                  {/* Hover overlay */}
                   <div style={styles.coverOverlay}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -224,7 +219,6 @@ export default function LivrosPage() {
                   </div>
                 </button>
 
-                {/* Footer */}
                 <div style={styles.cardFooter}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={styles.bookTitle} title={livro.title}>{livro.title}</p>
@@ -255,7 +249,6 @@ export default function LivrosPage() {
           </div>
         )}
 
-        {/* Empty state */}
         {!loading && resultados.length === 0 && !erro && (
           <div style={styles.emptyState}>
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--brand-light)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -269,7 +262,6 @@ export default function LivrosPage() {
         )}
       </div>
 
-      {/* ── Modal de detalhes (capa) ── */}
       {detalhes && (
         <>
           <div
@@ -307,10 +299,8 @@ export default function LivrosPage() {
         </>
       )}
 
-      {/* ── Bottom Sheet de status ── */}
       {livroMenu && (
         <>
-          {/* Backdrop */}
           <div
             onClick={() => setLivroMenu(null)}
             style={{
@@ -320,12 +310,9 @@ export default function LivrosPage() {
             }}
           />
 
-          {/* Sheet */}
           <div style={styles.sheet}>
-            {/* Handle */}
             <div style={styles.sheetHandle} />
 
-            {/* Book preview */}
             <div style={styles.sheetPreview}>
               {livroMenu.cover_url ? (
                 <img
@@ -442,7 +429,6 @@ const styles: Record<string, React.CSSProperties> = {
     background: 'var(--bg-card)',
     borderRadius: 'var(--radius)',
     border: '1px solid var(--border)',
-    /* SEM overflow:hidden — era isso que cortava o dropdown */
     display: 'flex',
     flexDirection: 'column' as const,
   },
@@ -523,8 +509,6 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     flexShrink: 0,
   },
-
-  /* Bottom sheet */
   sheet: {
     position: 'fixed' as const,
     bottom: 0,
@@ -594,8 +578,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: 'var(--text-secondary)',
     cursor: 'pointer',
   },
-
-  /* Toast */
   toast: {
     position: 'fixed' as const,
     bottom: 80,
@@ -612,7 +594,6 @@ const styles: Record<string, React.CSSProperties> = {
     textAlign: 'center' as const,
     boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
   },
-  // Modal de detalhes
   detalhesModal: {
     position: 'fixed' as const, top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
     background: 'var(--bg-card)', borderRadius: 'var(--radius)', zIndex: 401,
@@ -625,13 +606,39 @@ const styles: Record<string, React.CSSProperties> = {
     background: 'none', border: 'none', fontSize: 26,
     cursor: 'pointer', color: 'var(--text-secondary)', lineHeight: 1,
   },
-  detalhesHeader: { display: 'flex', gap: 16, alignItems: 'flex-start', marginTop: 8 },
-  detalhesTitulo: { fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 17, color: 'var(--brand)', marginBottom: 4 },
-  detalhesAutor:  { fontSize: 13, color: 'var(--text-secondary)' },
-  sinopseBox:     { overflowY: 'auto' as const, maxHeight: 260, paddingRight: 4 },
-  sinopseLabel:   { fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 14, color: 'var(--brand)', marginBottom: 8 },
-  sinopseTexto:   { fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.7 },
-
+  detalhesHeader: { 
+    display: 'flex', 
+    gap: 16, alignItems: 
+    'flex-start', 
+    marginTop: 8 
+  },
+  detalhesTitulo: { 
+    fontFamily: 'var(--font-display)', 
+    fontWeight: 800, fontSize: 17, 
+    color: 'var(--brand)', 
+    marginBottom: 4 
+  },
+  detalhesAutor: { 
+    fontSize: 13, 
+    color: 'var(--text-secondary)' 
+  },
+  sinopseBox: { 
+    overflowY: 'auto' as const, 
+    maxHeight: 260, 
+    paddingRight: 4 
+  },
+  sinopseLabel: { 
+    fontFamily: 'var(--font-display)', 
+    fontWeight: 700, 
+    fontSize: 14, 
+    color: 'var(--brand)', 
+    marginBottom: 8 
+  },
+  sinopseTexto: { 
+    fontSize: 13, 
+    color: 'var(--text-primary)', 
+    lineHeight: 1.7 
+  },
   emptyState: {
     display: 'flex',
     flexDirection: 'column' as const,

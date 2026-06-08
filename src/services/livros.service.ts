@@ -4,8 +4,6 @@ import type { StatusLeitura } from '@/repositories/livros.repository';
 const STATUS_VALIDOS: StatusLeitura[] = ['quero_ler', 'lendo', 'lido', 'abandonado'];
 const LIMITE_FILA = 15;
 
-// ── Erros de domínio ─────────────────────────────────────────────────────────
-
 export class LivroNaoEncontradoError extends Error {
   constructor() { super('Livro não encontrado para o usuário autenticado.'); }
 }
@@ -24,8 +22,6 @@ export class LivroJaNaEstanteError extends Error {
   constructor() { super('Este livro já está na sua estante.'); }
 }
 
-// ── Use cases ────────────────────────────────────────────────────────────────
-
 export async function listarLivros(usuario_id: string) {
   return LivrosRepository.findAllByUsuario(usuario_id);
 }
@@ -42,17 +38,14 @@ export async function adicionarLivro(
 ) {
   const { google_book_id, titulo, autores, capa_url, status: statusRaw } = dados;
 
-  // Valida e normaliza status
   const status: StatusLeitura =
     statusRaw && STATUS_VALIDOS.includes(statusRaw as StatusLeitura)
       ? (statusRaw as StatusLeitura)
       : 'quero_ler';
 
-  // Verifica duplicata
   const jaExiste = await LivrosRepository.findByGoogleBookId(google_book_id, usuario_id);
   if (jaExiste) throw new LivroJaNaEstanteError();
 
-  // Verifica limite de fila (só quero_ler e lendo contam)
   if (status === 'quero_ler' || status === 'lendo') {
     const pendentes = await LivrosRepository.countPendentes(usuario_id);
     console.log(`[LIMITE] usuario_id=${usuario_id} pendentes=${pendentes}`);

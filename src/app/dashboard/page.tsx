@@ -32,7 +32,6 @@ export default function DashboardPage() {
     load();
   }, [router]);
 
-  // Abandonados não contam na meta
   const livrosAtivos = livros.filter((l) => l.status !== 'abandonado');
   const total  = livrosAtivos.length;
   const lidos  = livrosAtivos.filter((l) => l.status === 'lido').length;
@@ -64,7 +63,6 @@ export default function DashboardPage() {
 
         <p style={styles.message}>{mensagem()}</p>
 
-        {/* Stats strip */}
         {!loading && total > 0 && (
           <div style={styles.stats}>
             <div style={styles.stat}>
