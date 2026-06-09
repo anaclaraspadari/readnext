@@ -38,14 +38,17 @@ export async function adicionarLivro(
 ) {
   const { google_book_id, titulo, autores, capa_url, status: statusRaw } = dados;
 
+  // Valida e normaliza status
   const status: StatusLeitura =
     statusRaw && STATUS_VALIDOS.includes(statusRaw as StatusLeitura)
       ? (statusRaw as StatusLeitura)
       : 'quero_ler';
 
+  // Verifica duplicata
   const jaExiste = await LivrosRepository.findByGoogleBookId(google_book_id, usuario_id);
   if (jaExiste) throw new LivroJaNaEstanteError();
 
+  // Verifica limite de fila (só quero_ler e lendo contam)
   if (status === 'quero_ler' || status === 'lendo') {
     const pendentes = await LivrosRepository.countPendentes(usuario_id);
     console.log(`[LIMITE] usuario_id=${usuario_id} pendentes=${pendentes}`);
@@ -74,6 +77,12 @@ export async function atualizarStatus(
 
   const livro = await LivrosRepository.findById(livro_id, usuario_id);
   if (!livro) throw new LivroNaoEncontradoError();
+
+  // Verifica limite ao mover para status ativo
+  if (status === 'quero_ler' || status === 'lendo') {
+    const pendentes = await LivrosRepository.countPendentes(usuario_id);
+    if (pendentes >= LIMITE_FILA) throw new LimiteFilaError(pendentes);
+  }
 
   const avaliacaoValida =
     avaliacao != null && Number.isInteger(avaliacao) && avaliacao >= 1 && avaliacao <= 5

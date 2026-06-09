@@ -96,7 +96,7 @@ describe('CT05 — Resposta da API retorna 403 com mensagem amigável', () => {
   });
 });
 
-describe('CT06 — Vaga aberta ao mover livro para Lido/Abandonado', () => {
+describe('CT06 — Vaga aberta ao mover livro para Lido', () => {
   it('simula que, apos mover um livro para Lido, uma vaga é aberta', async () => {
     asMock(prismaMock.livro.findFirst as jest.Mock).mockResolvedValue(null);
     asMock(prismaMock.livro.count    as jest.Mock).mockResolvedValue(14);
@@ -106,7 +106,17 @@ describe('CT06 — Vaga aberta ao mover livro para Lido/Abandonado', () => {
   });
 });
 
-describe('CT07 — Tentativas diretas via API respeitam o bloqueio', () => {
+describe('CT07 — Vaga aberta ao mover livro para Abandonado', () => {
+  it('simula que, apos mover um livro para Lido, uma vaga é aberta', async () => {
+    asMock(prismaMock.livro.findFirst as jest.Mock).mockResolvedValue(null);
+    asMock(prismaMock.livro.count    as jest.Mock).mockResolvedValue(14);
+    asMock(prismaMock.livro.create   as jest.Mock).mockResolvedValue(mockLivro(mockLivro()));
+
+    await expect(LivrosService.adicionarLivro(USUARIO_ID, {...dadosNovoLivro,})).resolves.toBeDefined();
+  });
+});
+
+describe('CT08 — Tentativas diretas via API respeitam o bloqueio', () => {
   it('retorna LimiteFilaError mesmo sem passar pelo Front-End', async () => {
     asMock(prismaMock.livro.findFirst as jest.Mock).mockResolvedValue(null);
     asMock(prismaMock.livro.count    as jest.Mock).mockResolvedValue(15);
@@ -114,4 +124,49 @@ describe('CT07 — Tentativas diretas via API respeitam o bloqueio', () => {
     await expect(LivrosService.adicionarLivro(USUARIO_ID, dadosNovoLivro)).rejects.toThrow(LimiteFilaError);
   });
 });
+
+describe('CT09 — Impedir mover Lido para Quero Ler com limite cheio', () => {
+  it('lança LimiteFilaError ao mover Lido → Quero Ler com 15 ativos', async () => {
+    const livroLido = mockLivro({ status: 'lido' });
+    asMock(prismaMock.livro.findFirst as jest.Mock).mockResolvedValue(livroLido);
+    asMock(prismaMock.livro.count    as jest.Mock).mockResolvedValue(15);
+    await expect(
+      LivrosService.atualizarStatus(USUARIO_ID, livroLido.id, 'quero_ler')
+    ).rejects.toThrow(LimiteFilaError);
+  });
+});
+
+describe('CT10 — Impedir mover Abandonado para Quero Ler com limite cheio', () => {
+  it('lança LimiteFilaError ao mover Abandonado → Quero Ler com 15 ativos', async () => {
+    const livroAbandonado = mockLivro({ status: 'abandonado' });
+    asMock(prismaMock.livro.findFirst as jest.Mock).mockResolvedValue(livroAbandonado);
+    asMock(prismaMock.livro.count    as jest.Mock).mockResolvedValue(15);
+    await expect(
+      LivrosService.atualizarStatus(USUARIO_ID, livroAbandonado.id, 'quero_ler')
+    ).rejects.toThrow(LimiteFilaError);
+  });
+});
+
+describe('CT11 - Impedir mover Lido para Lendo com limite cheio', () => {
+  it('lança LimiteFilaError ao mover Lido → Lendo com 15 ativos', async () => {
+    const livroLido = mockLivro({ status: 'lido' });
+    asMock(prismaMock.livro.findFirst as jest.Mock).mockResolvedValue(livroLido);
+    asMock(prismaMock.livro.count    as jest.Mock).mockResolvedValue(15);
+    await expect(
+      LivrosService.atualizarStatus(USUARIO_ID, livroLido.id, 'lendo')
+    ).rejects.toThrow(LimiteFilaError);
+  });
+});
+
+describe('CT12 - Impedir mover Abandonado para Lendo com limite cheio', () => {
+  it('lança LimiteFilaError ao mover Abandonado → Lendo com 15 ativos', async () => {
+    const livroAbandonado = mockLivro({ status: 'abandonado' });
+    asMock(prismaMock.livro.findFirst as jest.Mock).mockResolvedValue(livroAbandonado);
+    asMock(prismaMock.livro.count    as jest.Mock).mockResolvedValue(15);
+    await expect(
+      LivrosService.atualizarStatus(USUARIO_ID, livroAbandonado.id, 'lendo')
+    ).rejects.toThrow(LimiteFilaError);
+  });
+});
+
 
