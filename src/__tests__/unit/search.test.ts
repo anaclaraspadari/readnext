@@ -35,7 +35,7 @@ beforeEach(() => {
   asMock(prisma.livro.findMany).mockResolvedValue([]);
 });
 
-describe('CT13 — Busca por título retorna resultados corretamente', () => {
+describe('CT18 — Busca por título retorna resultados corretamente', () => {
   it('retorna livros do Google Books ao buscar por título', async () => {
         mockFetch(googleBooksRes);
         const resultados = await SearchService.buscarLivros('O Hobbit', 'title', USUARIO_ID);
@@ -54,7 +54,7 @@ describe('CT13 — Busca por título retorna resultados corretamente', () => {
     });
 });
 
-describe('CT14 - Busca por autor retorna livros do autor', () => {
+describe('CT19 - Busca por autor retorna livros do autor', () => {
     it('usa inauthor: na query quando searchType é author', async () => {
         mockFetch(googleBooksRes);
         const fetchSpy = global.fetch as jest.Mock;
@@ -72,7 +72,7 @@ describe('CT14 - Busca por autor retorna livros do autor', () => {
     });
 });
 
-describe('CT15 - Nenhum resultado encontrado', () => {
+describe('CT20 - Nenhum resultado encontrado', () => {
     it('retorna array vazio quando a API não encontra livros', async () => {
         mockFetch({ items: [] });
         const resultados = await SearchService.buscarLivros('Livro Inexistente', 'title', USUARIO_ID);
@@ -85,7 +85,7 @@ describe('CT15 - Nenhum resultado encontrado', () => {
     });
 });
 
-describe('CT16 - Metadados capiturados corretamente', () => {
+describe('CT21 - Metadados capiturados corretamente', () => {
     it('mapeia titulo, autor, ISBN e capa corretamente', async () => {
         mockFetch(googleBooksRes);
         const resultados = await SearchService.buscarLivros('O Hobbit', 'title', USUARIO_ID);
@@ -105,7 +105,7 @@ describe('CT16 - Metadados capiturados corretamente', () => {
     });
 });
 
-describe('CT17 - Placeholder quando livro não tem capa', () => {
+describe('CT22 - Placeholder quando livro não tem capa', () => {
     it('retorna URL undefined quando capa é ausente', async () => {
         mockFetch({items: [{
           id: 'gb_sem_capa',
@@ -122,7 +122,7 @@ describe('CT17 - Placeholder quando livro não tem capa', () => {
     });
 });
 
-describe('CT18 - Resiliência quando a API está fora do ar', () => {
+describe('CT23 - Resiliência quando a API está fora do ar', () => {
     it('lança erro quando fetch falha', async () => {
         (global.fetch as any) = jest.fn().mockImplementation(() => {
             throw new Error('Falha na API: Network error');

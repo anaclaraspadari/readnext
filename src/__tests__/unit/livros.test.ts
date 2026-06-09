@@ -2,7 +2,7 @@ import { jest, describe, it, expect, beforeEach } from '@jest/globals';
 import * as LivrosService from '@/services/livros.service';
 import { prisma } from '@/lib/prisma';
 import { asMock, mockLivro } from '../mocks';
-import { LimiteFilaError } from '@/services/livros.service';
+import { LimiteFilaError, StatusInvalidoError, LivroNaoEncontradoError } from '@/services/livros.service';
 
 // Tipagem dos mocks do Prisma
 const prismaMock = prisma as jest.Mocked<typeof prisma>;
@@ -169,4 +169,92 @@ describe('CT12 - Impedir mover Abandonado para Lendo com limite cheio', () => {
   });
 });
 
+describe('CT13 - Livro recém-adicionado tem status Quero Ler', () => {
+  it('cria livro com status Quero Ler por padrão', async () => {
+    asMock(prismaMock.livro.findFirst as jest.Mock).mockResolvedValue(null);
+    asMock(prismaMock.livro.count    as jest.Mock).mockResolvedValue(0);
+    asMock(prismaMock.livro.create   as jest.Mock).mockResolvedValue(mockLivro({ status: 'quero_ler' }));
 
+    const livroAdd = await LivrosService.adicionarLivro(USUARIO_ID, {
+      google_book_id: 'gb_001',titulo:'Emma',
+    });
+ 
+    expect(prismaMock.livro.create).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({status: 'quero_ler'})}));
+  });
+
+  it('respeita o status informado pelo usuario ao adicionar', async () => {
+    asMock(prismaMock.livro.findFirst as jest.Mock).mockResolvedValue(null);
+    asMock(prismaMock.livro.count    as jest.Mock).mockResolvedValue(0);
+    asMock(prismaMock.livro.create   as jest.Mock).mockResolvedValue(mockLivro({ status: 'lendo' }));
+
+    const livroAdd = await LivrosService.adicionarLivro(USUARIO_ID, {google_book_id: 'gb_002',titulo: '1984',status: 'lendo'});
+
+    expect(prismaMock.livro.create).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ status: 'lendo' }) }));
+  });
+});
+
+describe('CT14 - Alterar status de Quero Ler para Lendo', () => {
+  it('atualiza status para Lendo com sucesso', async () => {
+    const livroRes = mockLivro({ status: 'quero_ler' });
+    asMock(prismaMock.livro.findFirst as jest.Mock).mockResolvedValue(livroRes);
+    asMock(prismaMock.livro.update   as jest.Mock).mockResolvedValue(mockLivro({ ...livroRes, status: 'lendo' }));
+
+    const resultado=await LivrosService.atualizarStatus(USUARIO_ID, livroRes.id, 'lendo');
+    expect(resultado.status).toBe('lendo');
+    expect(prismaMock.livro.update).toHaveBeenCalledWith(expect.objectContaining({data: expect.objectContaining({ status: 'lendo' })}));
+  });
+});
+
+describe('CT15 - Alterar status de Lendo para Lido', () => {
+  it('atualiza status para Lido com sucesso', async () => {
+    const livroRes = mockLivro({ status: 'lendo' });
+    asMock(prismaMock.livro.findFirst as jest.Mock).mockResolvedValue(livroRes);
+    asMock(prismaMock.livro.update   as jest.Mock).mockResolvedValue(mockLivro({ ...livroRes, status: 'lido', data_finalizacao: new Date() }));
+
+    const resultado=await LivrosService.atualizarStatus(USUARIO_ID, livroRes.id, 'lido');
+    expect(resultado.status).toBe('lido');
+    expect(resultado.data_finalizacao).toBeInstanceOf(Date);
+    expect(prismaMock.livro.update).toHaveBeenCalledWith(expect.objectContaining({data: expect.objectContaining({ status: 'lido', data_finalizacao: expect.any(Date) })}));
+  });
+});
+
+describe('CT16 - Alterar status de Lendo para Abandonado', () => {
+  it('atualiza status para Abandonado e limpa data_finalizacao', async () => {
+    const livroRes = mockLivro({ status: 'lendo' });
+    asMock(prismaMock.livro.findFirst as jest.Mock).mockResolvedValue(livroRes);
+    asMock(prismaMock.livro.update   as jest.Mock).mockResolvedValue(mockLivro({ ...livroRes, status: 'abandonado', data_finalizacao: null }));
+
+    const resultado=await LivrosService.atualizarStatus(USUARIO_ID, livroRes.id, 'abandonado');
+    expect(resultado.status).toBe('abandonado');
+    expect(prismaMock.livro.update).toHaveBeenCalledWith(expect.objectContaining({data: expect.objectContaining({ status: 'abandonado', data_finalizacao: null })}));
+  });
+});
+
+describe('CT17 — Atualização persiste no banco via Prisma', () => {
+  it('chama prisma.livro.update com os dados corretos', async () => {
+    const livroRes = mockLivro({ status: 'quero_ler' });
+    asMock(prismaMock.livro.findFirst as jest.Mock).mockResolvedValue(livroRes);
+    asMock(prismaMock.livro.update   as jest.Mock).mockResolvedValue(mockLivro({ ...livroRes, status: 'lido'}));
+
+    await LivrosService.atualizarStatus(USUARIO_ID, livroRes.id, 'lido', 5);
+
+    expect(prismaMock.livro.update).toHaveBeenCalledWith(expect.objectContaining({
+      where: { id: livroRes.id },
+      data: {
+        status: 'lido',
+        avaliacao: 5,
+        data_finalizacao: expect.any(Date)
+      }
+    }));
+  });
+
+  it('lança LivroNaoEncontradoError quando livro não pertence ao usuario', async () => {
+    asMock(prismaMock.livro.findFirst as jest.Mock).mockResolvedValue(null);
+
+    await expect(LivrosService.atualizarStatus(USUARIO_ID, 'livro-de-outro-usuario', 'lido')).rejects.toThrow(LivroNaoEncontradoError);
+  });
+
+  it('lança StatusInvalidoError para status desconhecido', async () => {
+    await expect(LivrosService.atualizarStatus(USUARIO_ID,'livro-id','pausado')).rejects.toThrow(StatusInvalidoError);
+  });
+});
