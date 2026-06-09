@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const asMock = (fn: unknown) => fn as jest.Mock;
  
 export const mockLivro = (overrides = {}) => ({
@@ -22,3 +23,13 @@ export const mockUsuario = (overrides = {}) => ({
   foto_url: null,
   ...overrides,
 });
+
+export const mockFetch = (data: any) => {
+  (global.fetch as any) = jest.fn().mockResolvedValueOnce({
+    json: async () => data,
+  });
+};
+
+export const mockFetchError = (error: Error) => {
+  (global.fetch as any) = jest.fn().mockRejectedValueOnce(error);
+};
