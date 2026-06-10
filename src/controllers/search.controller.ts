@@ -7,7 +7,7 @@ export async function search(request: Request) {
   const query      = searchParams.get('q');
   const searchType = searchParams.get('searchType') || 'title';
 
-  if (!query) {
+  if (!query || !query.trim()) {
     return NextResponse.json({ error: 'Termo de busca é obrigatório.' }, { status: 400 });
   }
 

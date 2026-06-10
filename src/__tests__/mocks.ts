@@ -33,3 +33,14 @@ export const mockFetch = (data: any) => {
 export const mockFetchError = (error: Error) => {
   (global.fetch as any) = jest.fn().mockRejectedValueOnce(error);
 };
+
+export const mockRequest = (body: object = {}, searchParams: Record<string, string> = {}) => {
+  const url = new URL('http://localhost:3000/api/livros');
+  Object.entries(searchParams).forEach(([k, v]) => url.searchParams.set(k, v));
+ 
+  return {
+    json:    async () => body,
+    url:     url.toString(),
+    headers: new Headers({ cookie: 'auth_token=valid_token' }),
+  } as unknown as Request;
+};
