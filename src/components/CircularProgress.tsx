@@ -45,7 +45,7 @@ export default function CircularProgress({ percent, size = 220, stroke = 22 }: P
         dominantBaseline="central"
         style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 32, fill: 'var(--brand)' }}
       >
-        {Math.round(percent)}%
+        {Math.min(Math.round(percent), 100)}%
       </text>
     </svg>
   );
