@@ -36,14 +36,17 @@ export default function MeusLivrosPage() {
   const [loading, setLoading]             = useState(true);
   const [filtro, setFiltro]               = useState('todos');
 
+  // Modal de status
   const [modalLivro, setModalLivro]       = useState<Livro | null>(null);
   const [novoStatus, setNovoStatus]       = useState('');
   const [estrelas, setEstrelas]           = useState(0);
   const [hoverStar, setHoverStar]         = useState(0);
   const [salvando, setSalvando]           = useState(false);
 
+  // Modal de detalhes (capa clicada)
   const [detalhes, setDetalhes]           = useState<DetalhesLivro | null>(null);
 
+  // Confirmação de remoção
   const [livroParaRemover, setLivroParaRemover] = useState<Livro | null>(null);
   const [removendo, setRemovendoState]          = useState(false);
 
@@ -64,6 +67,7 @@ export default function MeusLivrosPage() {
     setLoading(false);
   }
 
+  // ── Detalhes do livro via Google Books ──────────────────────────────────────
   async function abrirDetalhes(livro: Livro) {
     setDetalhes({
       titulo:     livro.titulo,
@@ -84,7 +88,7 @@ export default function MeusLivrosPage() {
         autores:    info.authors  ?? livro.autores,
         capa_url:   info.imageLinks?.thumbnail?.replace('http:', 'https:') ?? livro.capa_url,
         sinopse:    info.description
-          ? info.description.replace(/<[^>]*>/g, '')
+          ? info.description.replace(/<[^>]*>/g, '') // remove HTML tags
           : 'Sinopse não disponível.',
         carregando: false,
       });
@@ -96,6 +100,7 @@ export default function MeusLivrosPage() {
     }
   }
 
+  // ── Alterar status ──────────────────────────────────────────────────────────
   async function confirmarStatus() {
     if (!modalLivro) return;
     setSalvando(true);
@@ -125,6 +130,7 @@ export default function MeusLivrosPage() {
     }
   }
 
+  // ── Remover livro ───────────────────────────────────────────────────────────
   async function confirmarRemocao() {
     if (!livroParaRemover) return;
     setRemovendoState(true);
@@ -256,6 +262,7 @@ export default function MeusLivrosPage() {
         </div>
       </div>
 
+      {/* ── Modal de detalhes (capa) ── */}
       {detalhes && (
         <>
           <div
@@ -301,9 +308,11 @@ export default function MeusLivrosPage() {
         </>
       )}
 
+      {/* ── Modal de alterar status ── */}
       {modalLivro && (
         <>
           <div
+            data-testid="modal-status-backdrop"
             onClick={() => !salvando && setModalLivro(null)}
             style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 200 }}
           />
@@ -359,6 +368,7 @@ export default function MeusLivrosPage() {
         </>
       )}
 
+      {/* ── Confirmação de remoção ── */}
       {livroParaRemover && (
         <>
           <div
@@ -392,6 +402,7 @@ export default function MeusLivrosPage() {
         </>
       )}
 
+      {/* Toast */}
       {toast && (
         <div style={{ ...styles.toast, background: toastColor[toast.tipo] }}>
           {toast.msg}
@@ -402,22 +413,9 @@ export default function MeusLivrosPage() {
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  page:{ 
-    padding: '24px 16px', 
-    maxWidth: 430, 
-    margin: '0 auto' 
-  },
-  title:      { 
-    fontFamily: 'var(--font-display)', 
-    fontWeight: 800, 
-    fontSize: 22, 
-    color: 'var(--brand)', 
-    textAlign: 'center', 
-    marginBottom: 16 
-  },
-  filterWrap: { 
-    marginBottom: 16 
-  },
+  page:       { padding: '24px 16px', maxWidth: 430, margin: '0 auto' },
+  title:      { fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 22, color: 'var(--brand)', textAlign: 'center', marginBottom: 16 },
+  filterWrap: { marginBottom: 16 },
   select: {
     width: '100%', border: '1.5px solid var(--brand)', borderRadius: 20,
     padding: '8px 36px 8px 16px', fontSize: 14, color: 'var(--text-secondary)',
@@ -425,33 +423,16 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23b45309' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,
     backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center',
   },
-  list: { 
-    display: 'flex', 
-    flexDirection: 'column', 
-    gap: 0 
-  },
-  card: { 
-    display: 'flex', 
-    alignItems: 'center', 
-    gap: 12, 
-    borderTop: '1px solid var(--border)', 
-    padding: '16px 0' 
-  },
+  list: { display: 'flex', flexDirection: 'column', gap: 0 },
+  card: { display: 'flex', alignItems: 'center', gap: 12, borderTop: '1px solid var(--border)', padding: '16px 0' },
 
+  // Capa clicável
   coverBtn: {
-    width: 64, 
-    height: 88, 
-    minWidth: 64,
-    background: '#e7e5e4', 
-    borderRadius: 4,
-    border: 'none', 
-    padding: 0, 
-    cursor: 'pointer',
-    position: 'relative' as const, 
-    overflow: 'hidden',
-    display: 'flex', 
-    alignItems: 'center', 
-    justifyContent: 'center',
+    width: 64, height: 88, minWidth: 64,
+    background: '#e7e5e4', borderRadius: 4,
+    border: 'none', padding: 0, cursor: 'pointer',
+    position: 'relative' as const, overflow: 'hidden',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
     flexShrink: 0,
   },
   coverOverlay: {
@@ -460,61 +441,20 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     opacity: 0,
     transition: 'opacity 0.15s',
+    // O hover é feito via CSS global — adicione ao globals.css:
+    // .cover-btn:hover .cover-overlay { opacity: 1; }
+    // Como estamos em inline styles, usamos sempre opacity: 0 e trocamos no hover via JS se quiser
   },
 
-  info: { 
-    flex: 1, 
-    minWidth: 0 
-  },
-  bookTitle:  { 
-    fontFamily: 'var(--font-display)', 
-    fontWeight: 700, 
-    fontSize: 14, 
-    color: 'var(--brand)', 
-    marginBottom: 2, 
-    overflow: 'hidden', 
-    textOverflow: 'ellipsis', 
-    whiteSpace: 'nowrap' as const 
-  },
-  author:     { 
-    fontSize: 12, 
-    color: 'var(--text-secondary)' 
-  },
-  statusCol:  { 
-    display: 'flex', 
-    flexDirection: 'column', 
-    alignItems: 'flex-end', 
-    gap: 6, 
-    minWidth: 110 
-  },
-  statusText: { 
-    fontSize: 11, 
-    color: 'var(--text-primary)', 
-    textAlign: 'right' as const 
-  },
-  alterarBtn: { 
-    background: 'var(--brand)', 
-    color: '#fff', 
-    border: 'none', 
-    borderRadius: 20, 
-    padding: '5px 10px', 
-    fontSize: 11, 
-    fontFamily: 'var(--font-body)', 
-    cursor: 'pointer', 
-    whiteSpace: 'nowrap' as const 
-  },
-  removerBtn: { 
-    background: 'transparent', 
-    color: '#dc2626', 
-    border: '1px solid #dc2626', 
-    borderRadius: 20, 
-    padding: '4px 10px', 
-    fontSize: 11, 
-    fontFamily: 'var(--font-body)', 
-    cursor: 'pointer', 
-    whiteSpace: 'nowrap' as const 
-  },
+  info:       { flex: 1, minWidth: 0 },
+  bookTitle:  { fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 14, color: 'var(--brand)', marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const },
+  author:     { fontSize: 12, color: 'var(--text-secondary)' },
+  statusCol:  { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, minWidth: 110 },
+  statusText: { fontSize: 11, color: 'var(--text-primary)', textAlign: 'right' as const },
+  alterarBtn: { background: 'var(--brand)', color: '#fff', border: 'none', borderRadius: 20, padding: '5px 10px', fontSize: 11, fontFamily: 'var(--font-body)', cursor: 'pointer', whiteSpace: 'nowrap' as const },
+  removerBtn: { background: 'transparent', color: '#dc2626', border: '1px solid #dc2626', borderRadius: 20, padding: '4px 10px', fontSize: 11, fontFamily: 'var(--font-body)', cursor: 'pointer', whiteSpace: 'nowrap' as const },
 
+  // Modal de detalhes
   detalhesModal: {
     position: 'fixed' as const, top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
     background: 'var(--bg-card)', borderRadius: 'var(--radius)', zIndex: 201,
@@ -526,151 +466,33 @@ const styles: Record<string, React.CSSProperties> = {
     background: 'none', border: 'none', fontSize: 26, cursor: 'pointer',
     color: 'var(--text-secondary)', lineHeight: 1,
   },
-  detalhesHeader: { 
-    display: 'flex', 
-    gap: 16, 
-    alignItems: 'flex-start', 
-    marginTop: 8 
-  },
-  detalhesTitulo: { 
-    fontFamily: 'var(--font-display)', 
-    fontWeight: 800, 
-    fontSize: 17, 
-    color: 'var(--brand)', 
-    marginBottom: 4 
-  },
-  detalhesAutor:  { 
-    fontSize: 13, 
-    color: 'var(--text-secondary)' 
-  },
-  sinopseBox:     { 
-    overflowY: 'auto' as const, 
-    maxHeight: 260, 
-    paddingRight: 4 
-  },
-  sinopseLabel:   { 
-    fontFamily: 'var(--font-display)', 
-    fontWeight: 700, 
-    fontSize: 14, 
-    color: 'var(--brand)', 
-    marginBottom: 8 
-  },
-  sinopseTexto:   { 
-    fontSize: 13, 
-    color: 'var(--text-primary)', 
-    lineHeight: 1.7 
-  },
+  detalhesHeader: { display: 'flex', gap: 16, alignItems: 'flex-start', marginTop: 8 },
+  detalhesTitulo: { fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 17, color: 'var(--brand)', marginBottom: 4 },
+  detalhesAutor:  { fontSize: 13, color: 'var(--text-secondary)' },
+  sinopseBox:     { overflowY: 'auto' as const, maxHeight: 260, paddingRight: 4 },
+  sinopseLabel:   { fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 14, color: 'var(--brand)', marginBottom: 8 },
+  sinopseTexto:   { fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.7 },
 
-  modal:       { 
-    position: 'fixed' as const, 
-    top: '50%', 
-    left: '50%', 
-    transform: 'translate(-50%, -50%)', 
-    background: 'var(--bg-card)', 
-    borderRadius: 'var(--radius)', 
-    zIndex: 201, 
-    padding: 24, 
-    width: 'min(90vw, 380px)', 
-    boxShadow: '0 8px 40px rgba(0,0,0,0.2)' 
-  },
-  modalHeader: { 
-    display: 'flex', 
-    gap: 16, 
-    marginBottom: 8 
-  },
-  modalCover:  { 
-    width: 80, 
-    height: 110, 
-    minWidth: 80, 
-    background: '#e7e5e4', 
-    borderRadius: 4, 
-    display: 'flex', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    overflow: 'hidden' 
-  },
-  modalTitle:  { 
-    fontFamily: 'var(--font-display)', 
-    fontWeight: 800, 
-    fontSize: 16, 
-    color: 'var(--brand)' 
-  },
-  modalAuthor: { 
-    fontSize: 12, 
-    color: 'var(--text-secondary)', 
-    marginTop: 2 
-  },
-  modalSelect: { 
-    border: '1.5px solid var(--brand)', 
-    borderRadius: 20, padding: '6px 12px', 
-    fontSize: 13, color: 'var(--text-primary)', 
-    background: 'transparent', 
-    outline: 'none', 
-    marginTop: 4, 
-    cursor: 'pointer', 
-    minWidth: 140 
-  },
-  autoHint:    { 
-    display: 'flex', 
-    alignItems: 'flex-start', 
-    gap: 8, 
-    background: 'var(--brand-light)', 
-    borderRadius: 'var(--radius-sm)', 
-    padding: '10px 14px', 
-    fontSize: 13, 
-    color: 'var(--brand-dark)', 
-    margin: '8px 0 0', 
-    lineHeight: 1.4 
-  },
-  confirmarBtn:{ 
-    width: '100%', 
-    background: 'var(--brand)', 
-    color: '#fff', 
-    border: 'none', 
-    borderRadius: 'var(--radius-btn)', 
-    padding: '12px', 
-    fontSize: 16, 
-    fontFamily: 'var(--font-display)', 
-    fontWeight: 800, 
-    cursor: 'pointer', 
-    transition: 'opacity 0.15s' 
-  },
+  // Modal de status
+  modal:       { position: 'fixed' as const, top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'var(--bg-card)', borderRadius: 'var(--radius)', zIndex: 201, padding: 24, width: 'min(90vw, 380px)', boxShadow: '0 8px 40px rgba(0,0,0,0.2)' },
+  modalHeader: { display: 'flex', gap: 16, marginBottom: 8 },
+  modalCover:  { width: 80, height: 110, minWidth: 80, background: '#e7e5e4', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  modalTitle:  { fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 16, color: 'var(--brand)' },
+  modalAuthor: { fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 },
+  modalSelect: { border: '1.5px solid var(--brand)', borderRadius: 20, padding: '6px 12px', fontSize: 13, color: 'var(--text-primary)', background: 'transparent', outline: 'none', marginTop: 4, cursor: 'pointer', minWidth: 140 },
+  autoHint:    { display: 'flex', alignItems: 'flex-start', gap: 8, background: 'var(--brand-light)', borderRadius: 'var(--radius-sm)', padding: '10px 14px', fontSize: 13, color: 'var(--brand-dark)', margin: '8px 0 0', lineHeight: 1.4 },
+  confirmarBtn:{ width: '100%', background: 'var(--brand)', color: '#fff', border: 'none', borderRadius: 'var(--radius-btn)', padding: '12px', fontSize: 16, fontFamily: 'var(--font-display)', fontWeight: 800, cursor: 'pointer', transition: 'opacity 0.15s' },
 
+  // Modal de confirmação de remoção
   confirmModal: {
     position: 'fixed' as const, top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
     background: 'var(--bg-card)', borderRadius: 'var(--radius)', zIndex: 201,
     padding: 28, width: 'min(90vw, 360px)', boxShadow: '0 8px 40px rgba(0,0,0,0.2)',
   },
-  confirmTitulo: { 
-    fontFamily: 'var(--font-display)', 
-    fontWeight: 800, 
-    fontSize: 18, 
-    color: '#dc2626', 
-    marginBottom: 12 
-  },
-  confirmTexto:  { 
-    fontSize: 14, 
-    color: 'var(--text-primary)', 
-    lineHeight: 1.6 
-  },
-  cancelarBtn:   { 
-    flex: 1, 
-    background: 'transparent', 
-    border: '1.5px solid var(--border)', 
-    borderRadius: 'var(--radius-btn)', 
-    padding: '11px', 
-    fontSize: 14, 
-    fontFamily: 'var(--font-body)', 
-    cursor: 'pointer', 
-    color: 'var(--text-secondary)' 
-  },
-  confirmarRemocaoBtn: { 
-    flex: 1, 
-    background: '#dc2626', 
-    color: '#fff', 
-    border: 'none', 
-    borderRadius: 'var(--radius-btn)', 
-    padding: '11px', fontSize: 14, fontFamily: 'var(--font-display)', fontWeight: 700, cursor: 'pointer' },
+  confirmTitulo: { fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 18, color: '#dc2626', marginBottom: 12 },
+  confirmTexto:  { fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6 },
+  cancelarBtn:   { flex: 1, background: 'transparent', border: '1.5px solid var(--border)', borderRadius: 'var(--radius-btn)', padding: '11px', fontSize: 14, fontFamily: 'var(--font-body)', cursor: 'pointer', color: 'var(--text-secondary)' },
+  confirmarRemocaoBtn: { flex: 1, background: '#dc2626', color: '#fff', border: 'none', borderRadius: 'var(--radius-btn)', padding: '11px', fontSize: 14, fontFamily: 'var(--font-display)', fontWeight: 700, cursor: 'pointer' },
 
   toast: {
     position: 'fixed' as const, bottom: 80, left: '50%', transform: 'translateX(-50%)',

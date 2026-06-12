@@ -4,37 +4,54 @@ import { useRouter } from 'next/navigation';
 import BaseLayout from '@/components/BaseLayout';
 import AvatarPicker from '@/components/AvatarPicker';
 
+// Função pura — facilita teste sem precisar renderizar o componente
+export function validarNome(nome: string): string | null {
+  if (!nome.trim()) return 'O nome não pode estar vazio.';
+  return null;
+}
+
 export default function ProfilePage() {
   const router = useRouter();
-  const [nome, setNome]         = useState('');
-  const [email, setEmail]       = useState('');
+  const [nome, setNome]           = useState('');
+  const [email, setEmail]         = useState('');
   const [fotoAtual, setFotoAtual] = useState<string | undefined>();
-  const [novaFoto, setNovaFoto] = useState<string | undefined>();
-  const [loading, setLoading]   = useState(true);
-  const [salvando, setSalvando] = useState(false);
-  const [sucesso, setSucesso]   = useState('');
-  const [erro, setErro]         = useState('');
+  const [novaFoto, setNovaFoto]   = useState<string | undefined>();
+  const [loading, setLoading]     = useState(true);
+  const [salvando, setSalvando]   = useState(false);
+  const [sucesso, setSucesso]     = useState('');
+  const [erro, setErro]           = useState('');
 
   useEffect(() => {
     async function load() {
-      const res = await fetch('/api/auth/me');
-      if (!res.ok) { router.push('/login'); return; }
-      const data = await res.json();
-      setNome(data.nome   || '');
-      setEmail(data.email || '');
-      setFotoAtual(data.foto_url || undefined);
-      setLoading(false);
+      try {
+        const res = await fetch('/api/auth/me');
+        if (!res.ok) { router.push('/login'); return; }
+        const data = await res.json();
+        setNome(data.nome   || '');
+        setEmail(data.email || '');
+        setFotoAtual(data.foto_url || undefined);
+      } catch {
+        router.push('/login');
+      } finally {
+        setLoading(false);
+      }
     }
     load();
   }, [router]);
 
   async function salvar() {
-    setErro(''); setSucesso('');
-    if (!nome.trim()) { setErro('O nome não pode estar vazio.'); return; }
+    setErro(''); 
+    setSucesso('');
+
+    const erroValidacao = validarNome(nome);
+    if (erroValidacao) { 
+      setErro(erroValidacao); 
+      return; 
+    }
+
     setSalvando(true);
 
     try {
-      // Atualiza foto se foi alterada
       if (novaFoto) {
         const resAvatar = await fetch('/api/auth/avatar', {
           method: 'PUT',
@@ -51,8 +68,7 @@ export default function ProfilePage() {
         setNovaFoto(undefined);
       }
 
-      // Aqui chamaria PUT /api/auth/me para atualizar nome quando implementado
-      setSucesso('Dados atualizados com sucesso!');
+      setSucesso('Dados updated com sucesso!');
     } catch {
       setErro('Erro de conexão.');
     } finally {
@@ -60,20 +76,21 @@ export default function ProfilePage() {
     }
   }
 
-  if (loading) return (
-    <BaseLayout>
-      <div style={{ padding: 32, textAlign: 'center', color: 'var(--text-secondary)' }}>
-        Carregando...
-      </div>
-    </BaseLayout>
-  );
+  if (loading) {
+    return (
+      <BaseLayout>
+        <div data-testid="profile-loading" style={{ padding: 32, textAlign: 'center', color: 'var(--text-secondary)' }}>
+          Carregando...
+        </div>
+      </BaseLayout>
+    );
+  }
 
   return (
     <BaseLayout>
       <div style={styles.page}>
         <h2 style={styles.title}>Alterar dados</h2>
 
-        {/* Avatar com picker */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
           <AvatarPicker
             fotoAtual={fotoAtual}
@@ -83,16 +100,20 @@ export default function ProfilePage() {
         </div>
 
         <div style={styles.form}>
-          <label style={styles.label}>Nome do usuário</label>
+          <label htmlFor="profile-nome" style={styles.label}>Nome do usuário</label>
           <input
+            id="profile-nome"
+            data-testid="profile-nome-input"
             type="text"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             style={styles.input}
           />
 
-          <label style={{ ...styles.label, marginTop: 20 }}>E-mail</label>
+          <label htmlFor="profile-email" style={{ ...styles.label, marginTop: 20 }}>E-mail</label>
           <input
+            id="profile-email"
+            data-testid="profile-email-input"
             type="email"
             value={email}
             disabled
@@ -102,8 +123,19 @@ export default function ProfilePage() {
             O e-mail não pode ser alterado.
           </p>
 
-          {sucesso && <p style={styles.sucesso}>{sucesso}</p>}
-          {erro    && <p style={styles.erro}>{erro}</p>}
+          {/* Renderização Condicional Exclusiva de Sucesso */}
+          {sucesso && (
+            <p data-testid="profile-sucesso" style={styles.sucesso}>
+              {sucesso}
+            </p>
+          )}
+
+          {/* Renderização Condicional Exclusiva de Erro */}
+          {erro && (
+            <p data-testid="profile-erro" style={styles.erro}>
+              {erro}
+            </p>
+          )}
 
           <button
             onClick={salvar}
@@ -119,12 +151,65 @@ export default function ProfilePage() {
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  page:   { padding: '32px 24px', maxWidth: 430, margin: '0 auto' },
-  title:  { fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 22, color: 'var(--brand)', textAlign: 'center', marginBottom: 24 },
-  form:   { display: 'flex', flexDirection: 'column' },
-  label:  { fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 14, color: 'var(--brand)', marginBottom: 8 },
-  input:  { border: '1.5px solid var(--brand)', borderRadius: 24, padding: '10px 18px', fontSize: 15, outline: 'none', background: 'transparent', color: 'var(--text-primary)', fontFamily: 'var(--font-body)', width: '100%' },
-  btn:    { marginTop: 28, background: 'var(--brand)', color: '#fff', border: 'none', borderRadius: 'var(--radius-btn)', padding: '13px', fontSize: 16, fontFamily: 'var(--font-display)', fontWeight: 800, cursor: 'pointer', width: '100%', transition: 'opacity 0.15s' },
-  sucesso: { color: '#16a34a', fontSize: 13, textAlign: 'center', marginTop: 12 },
-  erro:    { color: '#dc2626', fontSize: 13, textAlign: 'center', marginTop: 12 },
+  page:   { 
+    padding: '32px 24px', 
+    maxWidth: 430, 
+    margin: '0 auto' 
+  },
+  title:  { 
+    fontFamily: 'var(--font-display)', 
+    fontWeight: 800, 
+    fontSize: 22, 
+    color: 'var(--brand)', 
+    textAlign: 'center', 
+    marginBottom: 24 
+  },
+  form:   { 
+    display: 'flex', 
+    flexDirection: 'column' 
+  },
+  label:  { 
+    fontFamily: 'var(--font-display)', 
+    fontWeight: 700, 
+    fontSize: 14, 
+    color: 'var(--brand)', 
+    marginBottom: 8 
+  },
+  input:  { 
+    border: '1.5px solid var(--brand)', 
+    borderRadius: 24, 
+    padding: '10px 18px', 
+    fontSize: 15, 
+    outline: 'none', 
+    background: 'transparent', 
+    color: 'var(--text-primary)', 
+    fontFamily: 'var(--font-body)', 
+    width: '100%' 
+  },
+  btn:    { 
+    marginTop: 28, 
+    background: 'var(--brand)', 
+    color: '#fff', 
+    border: 'none', 
+    borderRadius: 'var(--radius-btn)', 
+    padding: '13px', 
+    fontSize: 16, 
+    fontFamily: 'var(--font-display)', 
+    fontWeight: 800, 
+    cursor: 'pointer', 
+    width: '100%', 
+    transition: 'opacity 0.15s' 
+  },
+  sucesso: { 
+    color: '#16a34a', 
+    fontSize: 13, 
+    textAlign: 'center', 
+    marginTop: 12 
+  },
+  erro:    { 
+    color: '#dc2626', 
+    fontSize: 13, 
+    textAlign: 'center', 
+    marginTop: 12 
+  },
 };

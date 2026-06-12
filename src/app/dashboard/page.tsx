@@ -9,41 +9,56 @@ interface Livro {
   status: string;
 }
 
+// Função pura exportada — facilita teste unitário sem renderizar o componente
+export function calcularMetrics(livros: Livro[]) {
+  const ativos = livros.filter((l) => l.status !== 'abandonado');
+  const total  = ativos.length;
+  const lidos  = ativos.filter((l) => l.status === 'lido').length;
+  const lendo  = livros.filter((l) => l.status === 'lendo').length;
+  const queroLer = livros.filter((l) => l.status === 'quero_ler').length;
+  const percent  = total > 0 ? Math.round((lidos / total) * 100) : 0;
+  return { total, lidos, lendo, queroLer, percent };
+}
+
+export function getMensagem(percent: number, total: number): string {
+  if (total === 0)       return 'Adicione livros e comece sua jornada!';
+  if (percent === 100)   return 'Parabéns! Você concluiu todos os livros!';
+  if (percent >= 75)     return 'Quase lá! Continue assim!';
+  if (percent >= 50)     return 'Você está na metade do caminho!';
+  if (percent > 0)       return 'Continue lendo e cumprindo suas metas!';
+  return 'Adicione livros e comece sua jornada!';
+}
+
 export default function DashboardPage() {
-  const router = useRouter();
-  const [nome, setNome] = useState('Usuário');
+  const router  = useRouter();
+  const [nome, setNome]     = useState('Usuário');
   const [livros, setLivros] = useState<Livro[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
-      const meRes = await fetch('/api/auth/me');
-      if (!meRes.ok) { router.push('/login'); return; }
-      const me = await meRes.json();
-      setNome(me.nome || 'Usuário');
+      try {
+        const meRes = await fetch('/api/auth/me');
+        if (!meRes.ok) { router.push('/login'); return; }
+        const me = await meRes.json();
+        setNome(me.nome || 'Usuário');
 
-      const livrosRes = await fetch('/api/livros');
-      if (livrosRes.ok) {
-        const data = await livrosRes.json();
-        setLivros(data);
+        const livrosRes = await fetch('/api/livros');
+        if (livrosRes.ok) {
+          const data = await livrosRes.json();
+          setLivros(data);
+        }
+      } catch {
+        router.push('/login');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     load();
   }, [router]);
 
-  const livrosAtivos = livros.filter((l) => l.status !== 'abandonado');
-  const total  = livrosAtivos.length;
-  const lidos  = livrosAtivos.filter((l) => l.status === 'lido').length;
-  const percent = total > 0 ? Math.round((lidos / total) * 100) : 0;
-
-  const mensagem = () => {
-    if (percent === 100 && total > 0) return 'Parabéns! Você concluiu todos os livros!';
-    if (percent >= 75) return 'Quase lá! Continue assim!';
-    if (percent >= 50) return 'Você está na metade do caminho!';
-    if (percent > 0) return 'Continue lendo e cumprindo suas metas!';
-    return 'Adicione livros e comece sua jornada!';
-  };
+  const { total, lidos, lendo, queroLer, percent } = calcularMetrics(livros);
+  const mensagem = getMensagem(percent, total);
 
   return (
     <BaseLayout>
@@ -54,33 +69,28 @@ export default function DashboardPage() {
         <p style={styles.subtitle}>Sua meta de leitura atual:</p>
 
         {loading ? (
-          <div style={styles.loadingRing} />
+          <div style={styles.loadingRing} aria-label="Carregando" />
         ) : (
           <div style={{ display: 'flex', justifyContent: 'center', margin: '12px 0' }}>
             <CircularProgress percent={percent} size={220} stroke={22} />
           </div>
         )}
 
-        <p style={styles.message}>{mensagem()}</p>
+        <p style={styles.message}>{mensagem}</p>
 
         {!loading && total > 0 && (
           <div style={styles.stats}>
-            <div style={styles.stat}>
-              <span style={styles.statNum}>{total}</span>
-              <span style={styles.statLabel}>Total</span>
-            </div>
-            <div style={styles.stat}>
-              <span style={styles.statNum}>{lidos}</span>
-              <span style={styles.statLabel}>Lidos</span>
-            </div>
-            <div style={styles.stat}>
-              <span style={styles.statNum}>{livros.filter((l) => l.status === 'lendo').length}</span>
-              <span style={styles.statLabel}>Lendo</span>
-            </div>
-            <div style={styles.stat}>
-              <span style={styles.statNum}>{livros.filter((l) => l.status === 'quero_ler').length}</span>
-              <span style={styles.statLabel}>Quero ler</span>
-            </div>
+            {[
+              { label: 'Total',     val: total    },
+              { label: 'Lidos',     val: lidos    },
+              { label: 'Lendo',     val: lendo    },
+              { label: 'Quero ler', val: queroLer },
+            ].map(({ label, val }) => (
+              <div key={label} style={styles.stat}>
+                <span style={styles.statNum}>{val}</span>
+                <span style={styles.statLabel}>{label}</span>
+              </div>
+            ))}
           </div>
         )}
       </div>
@@ -123,7 +133,6 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '50%',
     border: '22px solid var(--brand-light)',
     margin: '12px 0',
-    animation: 'spin 1.2s linear infinite',
   },
   stats: {
     display: 'grid',
