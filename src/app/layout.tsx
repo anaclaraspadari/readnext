@@ -3,7 +3,7 @@ import './globals.css';
  
 export const metadata: Metadata = {
   title: 'ReadNext',
-  description: 'Gerencie sua pilha de leitura!',
+  description: 'Gerencie sua lista de leitura!',
   icons: {
     icon: '/web-app-manifest-192x192.png',
   },
