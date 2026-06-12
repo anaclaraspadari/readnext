@@ -3,7 +3,10 @@ import './globals.css';
  
 export const metadata: Metadata = {
   title: 'ReadNext',
-  description: 'Seu gerenciador de leitura pessoal',
+  description: 'Gerencie sua pilha de leitura!',
+  icons: {
+    icon: '/web-app-manifest-192x192.png',
+  },
 };
  
 export default function RootLayout({ children }: { children: React.ReactNode }) {
