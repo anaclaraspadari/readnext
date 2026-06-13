@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import SidebarMenu from './SidebarMenu';
+import InstallPrompt from './InstallPrompt';
 
 interface Props {
   children: React.ReactNode;
@@ -124,6 +125,8 @@ export default function BaseLayout({ children }: Props) {
           );
         })}
       </nav>
+
+      <InstallPrompt />
     </div>
   );
 }
