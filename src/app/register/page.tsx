@@ -80,24 +80,6 @@ export default function CadastroPage() {
 
         {erro && <p style={styles.error}>{erro}</p>}
 
-        {/* Sim / Não */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 32, margin: '12px 0 20px' }}>
-          {[{ label: 'Sim', val: true }, { label: 'Não', val: false }].map(({ label, val }) => (
-            <label key={label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 15, color: 'var(--text-secondary)', cursor: 'pointer' }}>
-              <span
-                onClick={() => setAceito(val)}
-                style={{
-                  width: 20, height: 20, borderRadius: '50%',
-                  border: `2px solid ${aceito === val ? 'var(--brand)' : 'var(--text-secondary)'}`,
-                  background: aceito === val ? 'var(--brand)' : 'transparent',
-                  display: 'inline-block', transition: 'all 0.15s',
-                }}
-              />
-              {label}
-            </label>
-          ))}
-        </div>
-
         <button onClick={handleCadastrar} disabled={loading} style={styles.btn}>
           {loading ? 'Cadastrando...' : 'Cadastrar'}
         </button>
