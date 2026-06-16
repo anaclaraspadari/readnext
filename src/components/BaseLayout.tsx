@@ -50,7 +50,7 @@ export default function BaseLayout({ children }: Props) {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg)', maxWidth: 430, margin: '0 auto', position: 'relative' }}>
       {/* Header */}
       <header style={{
-        height: 'var(--header-height)',
+        height: 92,
         background: 'var(--brand)',
         display: 'flex',
         alignItems: 'center',
@@ -91,7 +91,7 @@ export default function BaseLayout({ children }: Props) {
         transform: 'translateX(-50%)',
         width: '100%',
         maxWidth: 430,
-        height: 'var(--nav-height)',
+        height: 92,
         background: 'var(--brand)',
         display: 'flex',
         alignItems: 'center',

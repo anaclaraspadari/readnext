@@ -55,10 +55,7 @@ export default function CadastroPage() {
       <h2 style={styles.title}>Cadastre-se</h2>
 
       <div style={styles.form}>
-        {/* Avatar */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
-          <AvatarPicker onChange={setFoto} />
-        </div>
+        
 
         {[
           { label: 'Nome do usuário', val: nome,      set: setNome,      type: 'text',     auto: 'name' },
@@ -77,6 +74,11 @@ export default function CadastroPage() {
             />
           </div>
         ))}
+
+        {/* Avatar */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
+          <AvatarPicker onChange={setFoto} />
+        </div>
 
         {erro && <p style={styles.error}>{erro}</p>}
 
