@@ -11,17 +11,22 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:ui": "jest --config jest.config.ui.ts",
-    "test:all": "jest --config jest.config.ts && jest --config jest.config.ui.ts"
+    "test:all": "jest --config jest.config.ts && jest --config jest.config.ui.ts",
+    "dev:test": "cross-env NODE_ENV=test next dev"
   },
   "dependencies": {
+    "@cypress/code-coverage": "^4.0.3",
     "@fortawesome/free-brands-svg-icons": "^7.2.0",
     "@fortawesome/free-regular-svg-icons": "^7.2.0",
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@fortawesome/react-fontawesome": "^3.3.1",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@types/istanbul": "^0.4.34",
     "axios": "^1.15.0",
+    "babel-plugin-istanbul": "^8.0.0",
     "bcryptjs": "^3.0.3",
+    "cross-env": "^10.1.0",
     "jsonwebtoken": "^9.0.3",
     "next": "16.2.3",
     "pg": "^8.20.0",

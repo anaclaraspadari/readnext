@@ -57,12 +57,6 @@ describe('Página de Cadastro — Renderização', () => {
     expect(screen.getByText('Confirmar senha')).toBeInTheDocument();
   });
  
-  it('renderiza opções Sim e Não', () => {
-    render(<CadastroPage />);
-    expect(screen.getByText('Sim')).toBeInTheDocument();
-    expect(screen.getByText('Não')).toBeInTheDocument();
-  });
- 
   it('renderiza botão Cadastrar', () => {
     render(<CadastroPage />);
     expect(screen.getByRole('button', { name: /cadastrar/i })).toBeInTheDocument();
@@ -122,9 +116,6 @@ describe('Página de Cadastro — Validações', () => {
     await user.type(inputs[1], 'ana@email.com');
     await user.type(inputs[2], 'senha123');
     await user.type(inputs[3], 'senha123');
-
-    const spansSim = container.querySelectorAll('span[style*="border-radius: 50%"]');
-    fireEvent.click(spansSim[0]);
 
     await user.click(screen.getByRole('button', { name: /cadastrar/i }));
 

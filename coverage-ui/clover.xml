@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1781727847276" clover="3.2.0">
+  <project timestamp="1781727847276" name="All files">
+    <metrics statements="401" coveredstatements="254" conditionals="251" coveredconditionals="132" methods="105" coveredmethods="59" elements="757" coveredelements="445" complexity="0" loc="401" ncloc="401" packages="16" files="22" classes="22"/>
+    <package name="app">
+      <metrics statements="8" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
+      <file name="layout.tsx" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\layout.tsx">
+        <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+      </file>
+      <file name="manifest.ts" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\manifest.ts">
+        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+      </file>
+      <file name="page.tsx" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\page.tsx">
+        <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.api.auth.avatar">
+      <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="route.ts" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\api\auth\avatar\route.ts">
+        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.api.auth.login">
+      <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="route.ts" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\api\auth\login\route.ts">
+        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.api.auth.logout">
+      <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="route.ts" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\api\auth\logout\route.ts">
+        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.api.auth.me">
+      <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="route.ts" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\api\auth\me\route.ts">
+        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.api.auth.register">
+      <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="route.ts" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\api\auth\register\route.ts">
+        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.api.livros">
+      <metrics statements="5" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="route.ts" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\api\livros\route.ts">
+        <metrics statements="5" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.api.search">
+      <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="route.ts" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\api\search\route.ts">
+        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.auth">
+      <metrics statements="4" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="auth.ts" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\auth\auth.ts">
+        <metrics statements="4" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="3" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="4" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.dashboard">
+      <metrics statements="41" coveredstatements="40" conditionals="21" coveredconditionals="18" methods="10" coveredmethods="10"/>
+      <file name="page.tsx" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\dashboard\page.tsx">
+        <metrics statements="41" coveredstatements="40" conditionals="21" coveredconditionals="18" methods="10" coveredmethods="10"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="13" count="4" type="stmt"/>
+        <line num="14" count="14" type="stmt"/>
+        <line num="15" count="14" type="stmt"/>
+        <line num="16" count="14" type="stmt"/>
+        <line num="17" count="14" type="stmt"/>
+        <line num="18" count="14" type="stmt"/>
+        <line num="19" count="14" type="cond" truecount="2" falsecount="0"/>
+        <line num="20" count="14" type="stmt"/>
+        <line num="23" count="5" type="stmt"/>
+        <line num="24" count="15" type="cond" truecount="2" falsecount="0"/>
+        <line num="25" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="26" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="27" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="28" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="32" count="5" type="stmt"/>
+        <line num="33" count="10" type="stmt"/>
+        <line num="34" count="10" type="stmt"/>
+        <line num="35" count="10" type="stmt"/>
+        <line num="36" count="10" type="stmt"/>
+        <line num="38" count="10" type="stmt"/>
+        <line num="40" count="9" type="stmt"/>
+        <line num="41" count="9" type="stmt"/>
+        <line num="42" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="43" count="4" type="stmt"/>
+        <line num="44" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="46" count="4" type="stmt"/>
+        <line num="47" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="48" count="4" type="stmt"/>
+        <line num="49" count="4" type="stmt"/>
+        <line num="52" count="4" type="stmt"/>
+        <line num="54" count="9" type="stmt"/>
+        <line num="57" count="9" type="stmt"/>
+        <line num="60" count="10" type="stmt"/>
+        <line num="61" count="10" type="stmt"/>
+        <line num="89" count="4" type="stmt"/>
+        <line num="101" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.livros">
+      <metrics statements="85" coveredstatements="56" conditionals="67" coveredconditionals="33" methods="28" coveredmethods="17"/>
+      <file name="page.tsx" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\livros\page.tsx">
+        <metrics statements="85" coveredstatements="56" conditionals="67" coveredconditionals="33" methods="28" coveredmethods="17"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="36" count="16" type="stmt"/>
+        <line num="37" count="104" type="stmt"/>
+        <line num="38" count="104" type="stmt"/>
+        <line num="39" count="104" type="stmt"/>
+        <line num="40" count="104" type="stmt"/>
+        <line num="41" count="104" type="stmt"/>
+        <line num="42" count="104" type="stmt"/>
+        <line num="43" count="104" type="stmt"/>
+        <line num="44" count="104" type="stmt"/>
+        <line num="45" count="104" type="stmt"/>
+        <line num="46" count="104" type="stmt"/>
+        <line num="48" count="104" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="50" count="1" type="stmt"/>
+        <line num="54" count="0" type="stmt"/>
+        <line num="55" count="0" type="stmt"/>
+        <line num="62" count="0" type="stmt"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="64" count="0" type="stmt"/>
+        <line num="65" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="66" count="0" type="stmt"/>
+        <line num="76" count="0" type="stmt"/>
+        <line num="77" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="82" count="104" type="stmt"/>
+        <line num="83" count="8" type="cond" truecount="1" falsecount="1"/>
+        <line num="84" count="8" type="stmt"/>
+        <line num="85" count="8" type="stmt"/>
+        <line num="86" count="8" type="stmt"/>
+        <line num="87" count="8" type="stmt"/>
+        <line num="88" count="8" type="stmt"/>
+        <line num="91" count="8" type="cond" truecount="1" falsecount="1"/>
+        <line num="92" count="0" type="stmt"/>
+        <line num="93" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="94" count="0" type="stmt"/>
+        <line num="95" count="0" type="stmt"/>
+        <line num="97" count="8" type="stmt"/>
+        <line num="98" count="8" type="cond" truecount="1" falsecount="1"/>
+        <line num="99" count="0" type="stmt"/>
+        <line num="100" count="0" type="stmt"/>
+        <line num="101" count="0" type="stmt"/>
+        <line num="103" count="8" type="stmt"/>
+        <line num="104" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="106" count="0" type="stmt"/>
+        <line num="108" count="8" type="stmt"/>
+        <line num="113" count="1" type="stmt"/>
+        <line num="114" count="1" type="stmt"/>
+        <line num="115" count="1" type="stmt"/>
+        <line num="116" count="1" type="stmt"/>
+        <line num="127" count="1" type="stmt"/>
+        <line num="128" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="130" count="0" type="stmt"/>
+        <line num="131" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="133" count="0" type="stmt"/>
+        <line num="134" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="135" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="136" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="137" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="139" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="140" count="1" type="stmt"/>
+        <line num="141" count="1" type="stmt"/>
+        <line num="142" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="146" count="0" type="stmt"/>
+        <line num="148" count="1" type="stmt"/>
+        <line num="163" count="66" type="stmt"/>
+        <line num="164" count="66" type="cond" truecount="1" falsecount="1"/>
+        <line num="169" count="0" type="stmt"/>
+        <line num="173" count="208" type="stmt"/>
+        <line num="192" count="26" type="stmt"/>
+        <line num="195" count="0" type="stmt"/>
+        <line num="233" count="4" type="stmt"/>
+        <line num="242" count="75" type="stmt"/>
+        <line num="273" count="0" type="stmt"/>
+        <line num="277" count="0" type="stmt"/>
+        <line num="312" count="0" type="stmt"/>
+        <line num="352" count="16" type="stmt"/>
+        <line num="354" count="1" type="stmt"/>
+        <line num="356" count="1" type="stmt"/>
+        <line num="357" count="0" type="stmt"/>
+        <line num="365" count="1" type="stmt"/>
+        <line num="382" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.login">
+      <metrics statements="23" coveredstatements="22" conditionals="13" coveredconditionals="11" methods="5" coveredmethods="5"/>
+      <file name="page.tsx" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\login\page.tsx">
+        <metrics statements="23" coveredstatements="22" conditionals="13" coveredconditionals="11" methods="5" coveredmethods="5"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="6" count="13" type="stmt"/>
+        <line num="7" count="99" type="stmt"/>
+        <line num="8" count="99" type="stmt"/>
+        <line num="9" count="99" type="stmt"/>
+        <line num="10" count="99" type="stmt"/>
+        <line num="11" count="99" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="15" count="5" type="cond" truecount="4" falsecount="0"/>
+        <line num="16" count="3" type="stmt"/>
+        <line num="17" count="3" type="stmt"/>
+        <line num="18" count="3" type="stmt"/>
+        <line num="23" count="3" type="stmt"/>
+        <line num="24" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="25" count="2" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="29" count="3" type="stmt"/>
+        <line num="43" count="52" type="stmt"/>
+        <line num="52" count="27" type="stmt"/>
+        <line num="55" count="27" type="cond" truecount="1" falsecount="1"/>
+        <line num="99" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.meus-livros">
+      <metrics statements="82" coveredstatements="62" conditionals="70" coveredconditionals="36" methods="27" coveredmethods="16"/>
+      <file name="page.tsx" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\meus-livros\page.tsx">
+        <metrics statements="82" coveredstatements="62" conditionals="70" coveredconditionals="36" methods="27" coveredmethods="16"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="33" count="19" type="stmt"/>
+        <line num="34" count="53" type="stmt"/>
+        <line num="35" count="53" type="stmt"/>
+        <line num="36" count="53" type="stmt"/>
+        <line num="37" count="53" type="stmt"/>
+        <line num="40" count="53" type="stmt"/>
+        <line num="41" count="53" type="stmt"/>
+        <line num="42" count="53" type="stmt"/>
+        <line num="43" count="53" type="stmt"/>
+        <line num="44" count="53" type="stmt"/>
+        <line num="47" count="53" type="stmt"/>
+        <line num="50" count="53" type="stmt"/>
+        <line num="51" count="53" type="stmt"/>
+        <line num="53" count="53" type="stmt"/>
+        <line num="55" count="53" type="stmt"/>
+        <line num="58" count="2" type="stmt"/>
+        <line num="59" count="2" type="stmt"/>
+        <line num="63" count="21" type="stmt"/>
+        <line num="64" count="21" type="cond" truecount="1" falsecount="1"/>
+        <line num="65" count="21" type="stmt"/>
+        <line num="66" count="21" type="cond" truecount="1" falsecount="1"/>
+        <line num="67" count="21" type="stmt"/>
+        <line num="72" count="0" type="stmt"/>
+        <line num="80" count="0" type="stmt"/>
+        <line num="81" count="0" type="stmt"/>
+        <line num="84" count="0" type="stmt"/>
+        <line num="85" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="86" count="0" type="stmt"/>
+        <line num="96" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="105" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="106" count="1" type="stmt"/>
+        <line num="107" count="1" type="stmt"/>
+        <line num="108" count="1" type="stmt"/>
+        <line num="117" count="1" type="stmt"/>
+        <line num="119" count="1" type="cond" truecount="1" falsecount="3"/>
+        <line num="121" count="1" type="stmt"/>
+        <line num="123" count="1" type="stmt"/>
+        <line num="124" count="1" type="stmt"/>
+        <line num="125" count="1" type="stmt"/>
+        <line num="127" count="0" type="stmt"/>
+        <line num="129" count="1" type="stmt"/>
+        <line num="135" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="136" count="1" type="stmt"/>
+        <line num="137" count="1" type="stmt"/>
+        <line num="138" count="1" type="stmt"/>
+        <line num="141" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="142" count="0" type="stmt"/>
+        <line num="143" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="144" count="0" type="stmt"/>
+        <line num="146" count="1" type="stmt"/>
+        <line num="147" count="1" type="stmt"/>
+        <line num="148" count="1" type="stmt"/>
+        <line num="150" count="0" type="stmt"/>
+        <line num="152" count="1" type="stmt"/>
+        <line num="156" count="53" type="stmt"/>
+        <line num="165" count="53" type="cond" truecount="2" falsecount="0"/>
+        <line num="167" count="53" type="stmt"/>
+        <line num="179" count="2" type="stmt"/>
+        <line num="181" count="265" type="stmt"/>
+        <line num="200" count="94" type="stmt"/>
+        <line num="204" count="0" type="stmt"/>
+        <line num="246" count="5" type="stmt"/>
+        <line num="247" count="5" type="stmt"/>
+        <line num="248" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="255" count="4" type="stmt"/>
+        <line num="269" count="0" type="stmt"/>
+        <line num="274" count="0" type="stmt"/>
+        <line num="316" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="334" count="0" type="stmt"/>
+        <line num="338" count="24" type="stmt"/>
+        <line num="349" count="30" type="stmt"/>
+        <line num="351" count="0" type="stmt"/>
+        <line num="352" count="0" type="stmt"/>
+        <line num="353" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="375" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="387" count="1" type="stmt"/>
+        <line num="415" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.profile">
+      <metrics statements="51" coveredstatements="43" conditionals="26" coveredconditionals="19" methods="6" coveredmethods="5"/>
+      <file name="page.tsx" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\profile\page.tsx">
+        <metrics statements="51" coveredstatements="43" conditionals="26" coveredconditionals="19" methods="6" coveredmethods="5"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="8" count="3" type="stmt"/>
+        <line num="9" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="10" count="3" type="stmt"/>
+        <line num="13" count="9" type="stmt"/>
+        <line num="14" count="26" type="stmt"/>
+        <line num="15" count="26" type="stmt"/>
+        <line num="16" count="26" type="stmt"/>
+        <line num="17" count="26" type="stmt"/>
+        <line num="18" count="26" type="stmt"/>
+        <line num="19" count="26" type="stmt"/>
+        <line num="20" count="26" type="stmt"/>
+        <line num="21" count="26" type="stmt"/>
+        <line num="22" count="26" type="stmt"/>
+        <line num="24" count="26" type="stmt"/>
+        <line num="26" count="21" type="stmt"/>
+        <line num="27" count="21" type="stmt"/>
+        <line num="28" count="20" type="cond" truecount="1" falsecount="1"/>
+        <line num="29" count="20" type="stmt"/>
+        <line num="30" count="20" type="cond" truecount="1" falsecount="1"/>
+        <line num="31" count="20" type="cond" truecount="1" falsecount="1"/>
+        <line num="32" count="20" type="cond" truecount="2" falsecount="0"/>
+        <line num="34" count="0" type="stmt"/>
+        <line num="36" count="20" type="stmt"/>
+        <line num="39" count="21" type="stmt"/>
+        <line num="43" count="2" type="stmt"/>
+        <line num="44" count="2" type="stmt"/>
+        <line num="46" count="2" type="stmt"/>
+        <line num="47" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="52" count="2" type="stmt"/>
+        <line num="54" count="2" type="stmt"/>
+        <line num="55" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="56" count="1" type="stmt"/>
+        <line num="61" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="62" count="0" type="stmt"/>
+        <line num="63" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="64" count="0" type="stmt"/>
+        <line num="66" count="1" type="stmt"/>
+        <line num="67" count="1" type="stmt"/>
+        <line num="68" count="1" type="stmt"/>
+        <line num="71" count="2" type="stmt"/>
+        <line num="73" count="0" type="stmt"/>
+        <line num="75" count="2" type="stmt"/>
+        <line num="79" count="26" type="cond" truecount="2" falsecount="0"/>
+        <line num="109" count="0" type="stmt"/>
+        <line num="153" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.register">
+      <metrics statements="31" coveredstatements="21" conditionals="19" coveredconditionals="11" methods="4" coveredmethods="4"/>
+      <file name="page.tsx" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\app\register\page.tsx">
+        <metrics statements="31" coveredstatements="21" conditionals="19" coveredconditionals="11" methods="4" coveredmethods="4"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="7" count="12" type="stmt"/>
+        <line num="8" count="136" type="stmt"/>
+        <line num="9" count="136" type="stmt"/>
+        <line num="10" count="136" type="stmt"/>
+        <line num="11" count="136" type="stmt"/>
+        <line num="12" count="136" type="stmt"/>
+        <line num="13" count="136" type="stmt"/>
+        <line num="14" count="136" type="stmt"/>
+        <line num="15" count="136" type="stmt"/>
+        <line num="16" count="136" type="stmt"/>
+        <line num="19" count="4" type="stmt"/>
+        <line num="20" count="4" type="cond" truecount="6" falsecount="0"/>
+        <line num="21" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="22" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="25" count="0" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="33" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="36" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="66" count="544" type="stmt"/>
+        <line num="71" count="120" type="stmt"/>
+        <line num="97" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="components">
+      <metrics statements="59" coveredstatements="10" conditionals="33" coveredconditionals="4" methods="21" coveredmethods="2"/>
+      <file name="AvatarPicker.tsx" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\components\AvatarPicker.tsx">
+        <metrics statements="13" coveredstatements="4" conditionals="4" coveredconditionals="2" methods="4" coveredmethods="1"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="10" count="8" type="cond" truecount="1" falsecount="0"/>
+        <line num="11" count="8" type="stmt"/>
+        <line num="12" count="8" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="16" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+      </file>
+      <file name="BaseLayout.tsx" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\components\BaseLayout.tsx">
+        <metrics statements="14" coveredstatements="0" conditionals="4" coveredconditionals="0" methods="5" coveredmethods="0"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="64" count="0" type="stmt"/>
+        <line num="79" count="0" type="stmt"/>
+        <line num="102" count="0" type="stmt"/>
+        <line num="103" count="0" type="stmt"/>
+        <line num="106" count="0" type="stmt"/>
+      </file>
+      <file name="CircularProgress.tsx" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\components\CircularProgress.tsx">
+        <metrics statements="6" coveredstatements="6" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+        <line num="9" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="10" count="7" type="stmt"/>
+        <line num="11" count="7" type="stmt"/>
+        <line num="12" count="7" type="stmt"/>
+        <line num="13" count="7" type="stmt"/>
+        <line num="14" count="7" type="stmt"/>
+      </file>
+      <file name="InstallPrompt.tsx" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\components\InstallPrompt.tsx">
+        <metrics statements="11" coveredstatements="0" conditionals="10" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="6" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="9" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="14" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="20" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="25" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+      </file>
+      <file name="SidebarMenu.tsx" path="C:\Users\Pichau\Documents\TADS\sems6\tcc\code\readnext-nextjs\src\components\SidebarMenu.tsx">
+        <metrics statements="15" coveredstatements="0" conditionals="13" coveredconditionals="0" methods="8" coveredmethods="0"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="15" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="19" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="30" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="120" count="0" type="stmt"/>
+        <line num="122" count="0" type="cond" truecount="0" falsecount="2"/>
+      </file>
+    </package>
+  </project>
+</coverage>
