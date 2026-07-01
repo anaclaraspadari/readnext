@@ -44,6 +44,7 @@ export default function LivrosPage() {
   const [adicionando, setAdicionando] = useState<string | null>(null);
   const [toast, setToast]             = useState('');
   const [detalhes, setDetalhes]       = useState<DetalhesLivro | null>(null);
+  const [limiteAlerta, setLimiteAlerta] = useState(false);
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -59,8 +60,26 @@ export default function LivrosPage() {
       sinopse:    '',
       carregando: true,
     });
+
+    if (!livro.id) {
+      setDetalhes((prev) => prev
+        ? { ...prev, sinopse: 'Sinopse não disponível para este livro.', carregando: false }
+        : null
+      );
+      return;
+    }
+
     try {
-      const res  = await fetch(`https://www.googleapis.com/books/v1/volumes/${livro.id}`);
+      const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${livro.id}`);
+
+      if (!res.ok) {
+        setDetalhes((prev) => prev
+          ? { ...prev, sinopse: 'Não foi possível carregar a sinopse agora. Tente novamente em alguns instantes.', carregando: false }
+          : null
+        );
+        return;
+      }
+
       const data = await res.json();
       const info = data.volumeInfo ?? {};
       setDetalhes({
@@ -69,12 +88,12 @@ export default function LivrosPage() {
         capa_url:   info.imageLinks?.thumbnail?.replace('http:', 'https:') ?? livro.cover_url,
         sinopse:    info.description
           ? info.description.replace(/<[^>]*>/g, '')
-          : 'Sinopse não disponível.',
+          : 'Este livro não possui sinopse cadastrada no Google Books.',
         carregando: false,
       });
     } catch {
       setDetalhes((prev) =>
-        prev ? { ...prev, sinopse: 'Não foi possível carregar a sinopse.', carregando: false } : null
+        prev ? { ...prev, sinopse: 'Não foi possível carregar a sinopse. Verifique sua conexão.', carregando: false } : null
       );
     }
   }
@@ -132,7 +151,7 @@ export default function LivrosPage() {
         );
         showToast('Este livro já está na sua estante.');
       } else if (res.status === 403) {
-        showToast(data.message || 'Limite de livros atingido!');
+        setLimiteAlerta(true);
       } else if (!res.ok) {
         showToast(data.error || 'Erro ao adicionar livro.');
       } else {
@@ -304,6 +323,32 @@ export default function LivrosPage() {
         </>
       )}
 
+      {/* ── Modal de alerta: limite do Tsundoku ── */}
+      {limiteAlerta && (
+        <>
+          <div
+            onClick={() => setLimiteAlerta(false)}
+            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 400 }}
+          />
+          <div style={styles.alertaModal}>
+            <div style={styles.alertaIconWrap}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 9v4M12 17h.01" />
+                <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
+              </svg>
+            </div>
+            <p style={styles.alertaTitulo}>Alerta de Acúmulo!</p>
+            <p style={styles.alertaTexto}>
+              Você já possui 15 livros entre <strong>Quero ler</strong> e <strong>Lendo</strong>.
+              Finalize ou abandone algum antes de adicionar um novo.
+            </p>
+            <button onClick={() => setLimiteAlerta(false)} style={styles.alertaBtn}>
+              Entendi
+            </button>
+          </div>
+        </>
+      )}
+
       {/* ── Bottom Sheet de status ── */}
       {livroMenu && (
         <>
@@ -319,9 +364,6 @@ export default function LivrosPage() {
 
           {/* Sheet */}
           <div style={styles.sheet}>
-            {/* Handle */}
-            <div style={styles.sheetHandle} />
-
             {/* Book preview */}
             <div style={styles.sheetPreview}>
               {livroMenu.cover_url ? (
@@ -386,6 +428,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 800,
     fontSize: 20,
     color: 'var(--brand)',
+    textAlign: 'center',
     marginBottom: 20,
   },
   searchRow: { display: 'flex', gap: 8, marginBottom: 12 },
@@ -524,16 +567,17 @@ const styles: Record<string, React.CSSProperties> = {
   /* Bottom sheet */
   sheet: {
     position: 'fixed' as const,
-    bottom: 0,
+    top: '50%',
     left: '50%',
-    transform: 'translateX(-50%)',
-    width: '100%',
-    maxWidth: 430,
+    transform: 'translate(-50%, -50%)',
+    width: 'min(92vw, 400px)',
+    maxHeight: '80vh',
+    overflowY: 'auto' as const,
     background: 'var(--bg-card)',
-    borderRadius: '20px 20px 0 0',
+    borderRadius: 'var(--radius)',
     zIndex: 401,
-    padding: '12px 0 32px',
-    boxShadow: '0 -4px 32px rgba(0,0,0,0.18)',
+    padding: '24px 0 24px',
+    boxShadow: '0 8px 40px rgba(0,0,0,0.25)',
   },
   sheetHandle: {
     width: 40, height: 4,
@@ -616,6 +660,28 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 24, width: 'min(92vw, 400px)', maxHeight: '80vh',
     boxShadow: '0 8px 40px rgba(0,0,0,0.25)', display: 'flex',
     flexDirection: 'column' as const, gap: 16,
+  },
+  alertaModal: {
+    position: 'fixed' as const, top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+    background: 'var(--bg-card)', borderRadius: 'var(--radius)', zIndex: 401,
+    padding: '28px 24px', width: 'min(88vw, 360px)',
+    boxShadow: '0 8px 40px rgba(0,0,0,0.25)', display: 'flex',
+    flexDirection: 'column' as const, alignItems: 'center', gap: 12, textAlign: 'center' as const,
+  },
+  alertaIconWrap: {
+    width: 52, height: 52, borderRadius: '50%', background: 'var(--brand-light)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 4,
+  },
+  alertaTitulo: {
+    fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 18, color: 'var(--brand)',
+  },
+  alertaTexto: {
+    fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6,
+  },
+  alertaBtn: {
+    width: '100%', background: 'var(--brand)', color: '#fff', border: 'none',
+    borderRadius: 'var(--radius-btn)', padding: '12px', fontSize: 15,
+    fontFamily: 'var(--font-display)', fontWeight: 700, cursor: 'pointer', marginTop: 8,
   },
   fecharBtn: {
     position: 'absolute' as const, top: 12, right: 16,

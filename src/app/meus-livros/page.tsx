@@ -77,24 +77,43 @@ export default function MeusLivrosPage() {
       carregando: true,
     });
 
+    // Sem google_book_id não há como buscar a sinopse na API
+    if (!livro.google_book_id) {
+      setDetalhes((prev) => prev
+        ? { ...prev, sinopse: 'Sinopse não disponível para este livro.', carregando: false }
+        : null
+      );
+      return;
+    }
+
     try {
-      const res  = await fetch(
+      const res = await fetch(
         `https://www.googleapis.com/books/v1/volumes/${livro.google_book_id}`
       );
+
+      if (!res.ok) {
+        setDetalhes((prev) => prev
+          ? { ...prev, sinopse: 'Não foi possível carregar a sinopse agora. Tente novamente em alguns instantes.', carregando: false }
+          : null
+        );
+        return;
+      }
+
       const data = await res.json();
       const info = data.volumeInfo ?? {};
+
       setDetalhes({
         titulo:     info.title    ?? livro.titulo,
         autores:    info.authors  ?? livro.autores,
         capa_url:   info.imageLinks?.thumbnail?.replace('http:', 'https:') ?? livro.capa_url,
         sinopse:    info.description
           ? info.description.replace(/<[^>]*>/g, '') // remove HTML tags
-          : 'Sinopse não disponível.',
+          : 'Este livro não possui sinopse cadastrada no Google Books.',
         carregando: false,
       });
     } catch {
       setDetalhes((prev) => prev
-        ? { ...prev, sinopse: 'Não foi possível carregar a sinopse.', carregando: false }
+        ? { ...prev, sinopse: 'Não foi possível carregar a sinopse. Verifique sua conexão.', carregando: false }
         : null
       );
     }
@@ -451,8 +470,8 @@ const styles: Record<string, React.CSSProperties> = {
   author:     { fontSize: 12, color: 'var(--text-secondary)' },
   statusCol:  { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, minWidth: 110 },
   statusText: { fontSize: 11, color: 'var(--text-primary)', textAlign: 'right' as const },
-  alterarBtn: { background: 'var(--brand)', color: '#fff', border: 'none', borderRadius: 20, padding: '5px 10px', fontSize: 11, fontFamily: 'var(--font-body)', cursor: 'pointer', whiteSpace: 'nowrap' as const },
-  removerBtn: { background: 'transparent', color: '#dc2626', border: '1px solid #dc2626', borderRadius: 20, padding: '4px 10px', fontSize: 11, fontFamily: 'var(--font-body)', cursor: 'pointer', whiteSpace: 'nowrap' as const },
+  alterarBtn: { background: 'var(--brand)', color: '#fff', border: '1px solid var(--brand)', borderRadius: 20, padding: '5px 10px', fontSize: 11, fontFamily: 'var(--font-body)', cursor: 'pointer', whiteSpace: 'nowrap' as const, minWidth: 96, textAlign: 'center' as const, boxSizing: 'border-box' as const },
+  removerBtn: { background: 'transparent', color: '#dc2626', border: '1px solid #dc2626', borderRadius: 20, padding: '5px 10px', fontSize: 11, fontFamily: 'var(--font-body)', cursor: 'pointer', whiteSpace: 'nowrap' as const, minWidth: 96, textAlign: 'center' as const, boxSizing: 'border-box' as const },
 
   // Modal de detalhes
   detalhesModal: {
